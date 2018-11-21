@@ -10,7 +10,8 @@ import numpy as np
 import config as cfg
 import os
 from torch.utils.data import Dataset, DataLoader
-import torchvision.transforms as transforms
+import opencv_transforms as transforms
+# import torchvision.transforms as transforms
 import torchvision.models as models
 import torch.nn as nn
 import torch

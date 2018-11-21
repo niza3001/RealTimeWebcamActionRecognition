@@ -1,10 +1,12 @@
 import pickle
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
-import torchvision.transforms as transforms
+import opencv_transforms as transforms
+# import torchvision.transforms as transforms
 import random
 from split_train_test_video import *
 from skimage import io, color, exposure
+import cv2
 
 
 class spatial_dataset(Dataset):
@@ -28,9 +30,8 @@ class spatial_dataset(Dataset):
         else:
             path = self.root_dir + 'v_'+video_name+'/'
          
-        img = Image.open(path + 'frame{}.jpg'.format(str(index).zfill(6)))
+        img = cv2.imread(path + 'frame{}.jpg'.format(str(index).zfill(6)), 1)
         transformed_img = self.transform(img)
-        img.close()
 
         return transformed_img
 

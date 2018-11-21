@@ -7,25 +7,27 @@ from tqdm import tqdm
 import shutil
 from random import randint
 import argparse
-import torchvision.transforms as transforms
+# import torchvision.transforms as transforms
+import opencv_transforms as transforms
 import torchvision.models as models
 import torch.nn as nn
 import torch
 import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
+import cv2
 import dataloader
 from utils import *
 from network import NLN_CNN
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+from dataloader.split_train_test_video import UCF101_splitter
 
 parser = argparse.ArgumentParser(description='UCF101 Non-Local CNN')
+parser.add_argument('--cwd', default=os.getcwd(), type=str, metavar='CWD', help='curent working directory')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
 parser.add_argument('--batch-size', default=2, type=int, metavar='N', help='mini-batch size (default: 2)')
 parser.add_argument('--lr', default=5e-4, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
+parser.add_argument('--demo', dest='demo', action='store_true', help='initialize inference on video source')
 parser.add_argument('--resume', default='/hdd/NLN/record/checkpoint.pth.tar', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 
@@ -35,32 +37,98 @@ def main():
     arg = parser.parse_args()
     print arg
 
-    # Prepare DataLoader
-    data_loader = dataloader.spatial_dataloader(
-                        BATCH_SIZE=arg.batch_size,
-                        num_workers=8,
-                        path='/hdd/UCF-101/Data/jpegs_256/',
-                        ucf_list='/hdd/NLN/UCF_list/',
-                        ucf_split='03',
-                        )
-    
-    train_loader, test_loader, test_video = data_loader.run()
+    # Skip loading data if inference mode is on
+    if arg.demo is False:
+        os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+        # Prepare DataLoader
+        data_loader = dataloader.spatial_dataloader(
+                            BATCH_SIZE=arg.batch_size,
+                            num_workers=8,
+                            path='/hdd/UCF-101/Data/jpegs_256/',
+                            ucf_list='/hdd/NLN/UCF_list/',
+                            ucf_split='03',
+                            )
+        train_loader, test_loader, test_video = data_loader.run()
 
-    # Model
-    model = NLN_Trainer(
-                        nb_epochs=arg.epochs,
-                        lr=arg.lr,
-                        batch_size=arg.batch_size,
-                        resume=arg.resume,
-                        start_epoch=arg.start_epoch,
-                        evaluate=arg.evaluate,
-                        train_loader=train_loader,
-                        test_loader=test_loader,
-                        test_video=test_video
-    )
+        # Model
+        model = NLN_Trainer(
+                            nb_epochs=arg.epochs,
+                            lr=arg.lr,
+                            batch_size=arg.batch_size,
+                            resume=arg.resume,
+                            start_epoch=arg.start_epoch,
+                            evaluate=arg.evaluate,
+                            train_loader=train_loader,
+                            test_loader=test_loader,
+                            test_video=test_video
+        )
+        # Training
+        model.run()
 
-    #Training
-    model.run()
+    else:
+        # Start predicting action on video source (default: webcam)
+        vs = cv2.VideoCapture(0)
+        model = NLN_Demo(vs=vs, resume=arg.resume)
+        model.inference(vs)
+
+
+class NLN_Demo():
+
+    def __init__(self, vs, resume):
+        # Create a dictionary of the classes and their corresponding indices
+        self.data_handler = UCF101_splitter(arg.cwd+'/UCF_list/', None)
+        self.data_handler.get_action_index()
+        self.class_to_idx = self.data_handler.action_label
+        self.idx_to_class = {v: k for k, v in self.class_to_idx.iteritems()}
+
+        # load the same transformation mechanism on images like in training
+        self.transform = transforms.Compose([
+                transforms.RandomCrop(224),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
+        # Load the saved model
+        self.model = NLN_CNN().cpu()
+        self.model.eval()
+        self.checkpoint = torch.load(resume, map_location='cpu')
+        self.model.load_state_dict(self.checkpoint['state_dict'])
+
+    def inference(self, vs):
+        # Start looping on frames received from video source
+        while True:
+            # read each frame and prepare it for feedforward in nn (resize and type)
+            _, orig_frame = vs.read()
+            frame = self.transform(orig_frame).view(1, 3, 224, 224)
+
+            # frame = cv2.resize(orig_frame, (224, 224))
+            # frame = np.rollaxis(frame, 2, 0).reshape((1, 3, 224, 224))
+            # frame = torch.from_numpy(frame).type('torch.FloatTensor')
+
+            # feed the frame to the neural network
+            nn_output = self.model(frame)
+            softmax = torch.nn.Softmax()
+            nn_output = softmax(nn_output)
+            nn_output = nn_output.data.cpu().numpy()
+
+            # extract the highest ranked prediction
+            preds = nn_output.argsort()[0][-5:][::-1]
+            pred_classes = [(self.idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
+
+            # Display the resulting frame and the classified action
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            y0, dy = 300, 40
+            for i in xrange(5):
+                y = y0 + i * dy
+                cv2.putText(orig_frame, '{} - {:.2f}'.format(pred_classes[i][0], pred_classes[i][1]),
+                            (5, y), font, 1, (0, 0, 255), 2)
+            cv2.imshow('frame', orig_frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # When everything done, release the capture
+        vs.release()
+        cv2.destroyAllWindows()
 
 
 class NLN_Trainer():
