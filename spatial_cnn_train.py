@@ -96,24 +96,29 @@ class NLN_Demo():
 
     def inference(self, vs):
         # Start looping on frames received from video source
+        frame_count = 0
+        softmax = torch.nn.Softmax()
+        nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32)
+
         while True:
             # read each frame and prepare it for feedforward in nn (resize and type)
             _, orig_frame = vs.read()
             frame = self.transform(orig_frame).view(1, 3, 224, 224)
 
-            # frame = cv2.resize(orig_frame, (224, 224))
-            # frame = np.rollaxis(frame, 2, 0).reshape((1, 3, 224, 224))
-            # frame = torch.from_numpy(frame).type('torch.FloatTensor')
-
             # feed the frame to the neural network
-            nn_output = self.model(frame)
-            softmax = torch.nn.Softmax()
-            nn_output = softmax(nn_output)
-            nn_output = nn_output.data.cpu().numpy()
+            nn_output += self.model(frame)
+
+            # vote for class with 10 consecutive frames
+            if frame_count % 20 == 0:
+                nn_output = softmax(nn_output)
+                nn_output = nn_output.data.cpu().numpy()
+                preds = nn_output.argsort()[0][-5:][::-1]
+                pred_classes = [(self.idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
+
+                # reset the process
+                nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32)
 
             # extract the highest ranked prediction
-            preds = nn_output.argsort()[0][-5:][::-1]
-            pred_classes = [(self.idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
 
             # Display the resulting frame and the classified action
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -154,7 +159,7 @@ class NLN_Trainer():
         # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.SGD(self.model.parameters(), self.lr, momentum=0.9)
-        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', patience=1, verbose=True)
+        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=1, verbose=True, min_lr=1e-10)
     
     def resume_and_evaluate(self):
         if self.resume:
