@@ -84,7 +84,7 @@ class spatial_dataloader():
 
     def load_frame_count(self):
         #print '==> Loading frame number of each video'
-        with open('dataloader/dic/frame_count.pickle', 'rb') as file:
+        with open('/hdd/NLN/dataloader/dic/frame_count.pickle', 'rb') as file:
             dic_frame = pickle.load(file)
         file.close()
 
@@ -163,6 +163,6 @@ if __name__ == '__main__':
     dataloader = spatial_dataloader(BATCH_SIZE=1, num_workers=1, 
                                 path='/hdd/UCF-101/Data/jpegs_256/',
                                 ucf_list='/hdd/NLN/UCF_list/',
-                                ucf_split='01')
+                                ucf_split='00')
     train_loader, val_loader, test_video = dataloader.run()
     pass

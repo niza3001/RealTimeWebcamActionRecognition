@@ -63,7 +63,7 @@ class UCF101_splitter():
 if __name__ == '__main__':
 
     path = '/hdd/NLN/UCF_list/'
-    split = '01'
+    split = '00'
     splitter = UCF101_splitter(path=path,split=split)
     train_video,test_video = splitter.split_video()
     print len(train_video),len(test_video)

@@ -18,9 +18,11 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 import cv2
 import dataloader
 from utils import *
-from network import NLN_CNN
+from network_vgg_nln import NLN_CNN
+from network_resnet_nln import resnet50
 from dataloader.split_train_test_video import UCF101_splitter
 
+CHECKPOINT_PATH = '/hdd/NLN/record/checkpoint.pth.tar'
 parser = argparse.ArgumentParser(description='UCF101 Non-Local CNN')
 parser.add_argument('--cwd', default=os.getcwd(), type=str, metavar='CWD', help='curent working directory')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
@@ -28,7 +30,7 @@ parser.add_argument('--batch-size', default=2, type=int, metavar='N', help='mini
 parser.add_argument('--lr', default=5e-4, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--demo', dest='demo', action='store_true', help='initialize inference on video source')
-parser.add_argument('--resume', default='/hdd/NLN/record/checkpoint.pth.tar', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
+parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 
 
@@ -46,7 +48,7 @@ def main():
                             num_workers=8,
                             path='/hdd/UCF-101/Data/jpegs_256/',
                             ucf_list='/hdd/NLN/UCF_list/',
-                            ucf_split='03',
+                            ucf_split='00',
                             )
         train_loader, test_loader, test_video = data_loader.run()
 
@@ -89,7 +91,7 @@ class NLN_Demo():
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
         # Load the saved model
-        self.model = NLN_CNN().cpu()
+        self.model = resnet50(pretrained=False, channel=3).cpu()
         self.model.eval()
         self.checkpoint = torch.load(resume, map_location='cpu')
         self.model.load_state_dict(self.checkpoint['state_dict'])
@@ -154,7 +156,7 @@ class NLN_Trainer():
         print ('==> Build model and setup loss and optimizer')
 
         # build model
-        self.model = NLN_CNN().cuda()
+        self.model = resnet50(pretrained=True, channel=3).cuda()
 
         # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
