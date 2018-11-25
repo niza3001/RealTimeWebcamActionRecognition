@@ -194,7 +194,7 @@ class NLN_Trainer():
             is_best = prec1 > self.best_prec1
 
             # warm-up phase for pre-trained weights
-            if self.epoch <= 5:
+            if self.epoch < 5:
                 self.lr *= 10
                 self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
 
