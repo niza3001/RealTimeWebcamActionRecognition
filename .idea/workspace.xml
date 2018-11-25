@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2b5b97f0-745c-4ee9-9621-9509a72fb39e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/filter_classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UCF_list/classInd.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UCF_list/classInd.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UCF_list/trainlist00" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataloader/spatial_dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataloader/spatial_dataloader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataloader/split_train_test_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataloader/split_train_test_video.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/filter_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/filter_classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/network_resnet_nln.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_resnet_nln.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/network_vgg_nln.py" beforeDir="false" afterPath="$PROJECT_DIR$/network_vgg_nln.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spatial_cnn_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/spatial_cnn_train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,25 +28,25 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="32" />
+          <entry key="py" value="35" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="32" />
+          <entry key="Python" value="35" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="12" />
-          <entry key="py" value="2543" />
+          <entry key="py" value="2693" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="2555" />
+          <entry key="Python" value="2705" />
         </counts>
       </usages-collector>
     </session>
@@ -59,69 +56,32 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/filter_classes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-469">
-              <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
+            <state relative-caret-position="324">
+              <caret line="69" column="14" lean-forward="true" selection-start-line="69" selection-start-column="14" selection-end-line="69" selection-end-column="14" />
               <folding>
-                <marker date="1543150782549" expanded="true" signature="2337:2536" ph="..." />
-                <marker date="1543150782549" expanded="true" signature="2855:2857" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/network_resnet_nln.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="134" column="57" selection-start-line="134" selection-start-column="57" selection-end-line="134" selection-end-column="57" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/network_vgg_nln.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="24" column="25" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#20#0" expanded="true" />
+                <marker date="1543154411081" expanded="true" signature="93:94" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/non_local_simple_version.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1556">
+              <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="147" column="91" selection-start-line="147" selection-start-column="91" selection-end-line="147" selection-end-column="91" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dataloader/split_train_test_video.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
+            <state relative-caret-position="-5509">
+              <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -137,8 +97,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>record</find>
-      <find>checkpoint</find>
       <find>save</find>
       <find>Image</find>
       <find>spatial_dataset</find>
@@ -161,12 +119,14 @@
       <find>crite</find>
       <find>sampling</find>
       <find>n_classes</find>
-      <find>101</find>
       <find>sampling</find>
       <find>validation data</find>
       <find>resnet50</find>
       <find>batch</find>
+      <find>101</find>
       <find>split</find>
+      <find>validate</find>
+      <find>plate</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -183,11 +143,12 @@
         <option value="$PROJECT_DIR$/non_local.py" />
         <option value="$PROJECT_DIR$/network.py" />
         <option value="$PROJECT_DIR$/opencv_functional.py" />
-        <option value="$PROJECT_DIR$/dataloader/split_train_test_video.py" />
-        <option value="$PROJECT_DIR$/network_resnet_nln.py" />
         <option value="$PROJECT_DIR$/dataloader/spatial_dataloader.py" />
-        <option value="$PROJECT_DIR$/filter_classes.py" />
+        <option value="$PROJECT_DIR$/network_resnet_nln.py" />
+        <option value="$PROJECT_DIR$/network_vgg_nln.py" />
+        <option value="$PROJECT_DIR$/dataloader/split_train_test_video.py" />
         <option value="$PROJECT_DIR$/spatial_cnn_train.py" />
+        <option value="$PROJECT_DIR$/filter_classes.py" />
       </list>
     </option>
   </component>
@@ -373,12 +334,12 @@
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3294979" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39958158" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -523,13 +484,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/opencv_transforms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="163" column="13" lean-forward="true" selection-start-line="163" selection-start-column="13" selection-end-line="163" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/optim/optimizer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
@@ -588,16 +542,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/network_vgg_nln.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" column="25" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
@@ -608,27 +552,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataloader/split_train_test_video.py">
+    <entry file="file://$PROJECT_DIR$/network_vgg_nln.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="90">
+          <caret line="5" column="31" selection-start-line="5" selection-start-column="31" selection-end-line="5" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/filter_classes.py">
+    <entry file="file://$PROJECT_DIR$/dataloader/split_train_test_video.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-469">
-          <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
-          <folding>
-            <marker date="1543150782549" expanded="true" signature="2337:2536" ph="..." />
-            <marker date="1543150782549" expanded="true" signature="2855:2857" ph="..." />
-          </folding>
+        <state relative-caret-position="395">
+          <caret line="48" column="15" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/network_resnet_nln.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
+        <state relative-caret-position="521">
           <caret line="134" column="57" selection-start-line="134" selection-start-column="57" selection-end-line="134" selection-end-column="57" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
@@ -636,12 +579,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/opencv_transforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="123" column="8" selection-start-line="123" selection-start-column="8" selection-end-line="123" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
+        <state relative-caret-position="-5509">
+          <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/filter_classes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="69" column="14" lean-forward="true" selection-start-line="69" selection-start-column="14" selection-end-line="69" selection-end-column="14" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1543154411081" expanded="true" signature="93:94" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/non_local_simple_version.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1556">
+          <caret line="18" column="38" selection-start-line="18" selection-start-column="38" selection-end-line="18" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>

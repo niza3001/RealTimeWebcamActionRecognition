@@ -18,11 +18,12 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 import cv2
 import dataloader
 from utils import *
-from network_vgg_nln import NLN_CNN
+from network_vgg_nln import vgg_nln
 from network_resnet_nln import resnet50
 from dataloader.split_train_test_video import UCF101_splitter
 
 CHECKPOINT_PATH = '/hdd/NLN/record/checkpoint.pth.tar'
+BEST_PATH = '/hdd/NLN/record/model_best.pth.tar'
 parser = argparse.ArgumentParser(description='UCF101 Non-Local CNN')
 parser.add_argument('--cwd', default=os.getcwd(), type=str, metavar='CWD', help='curent working directory')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
@@ -85,6 +86,7 @@ class NLN_Demo():
 
         # load the same transformation mechanism on images like in training
         self.transform = transforms.Compose([
+                transforms.Resize((256, 342)),
                 transforms.RandomCrop(224),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
@@ -160,7 +162,7 @@ class NLN_Trainer():
         # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
-        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=3, verbose=True)
+        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=1, verbose=True)
     
     def resume_and_evaluate(self):
         if self.resume:

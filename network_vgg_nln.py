@@ -5,9 +5,9 @@ import os
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-class NLN_CNN(nn.Module):
+class vgg_nln(nn.Module):
     def __init__(self):
-        super(NLN_CNN, self).__init__()
+        super(vgg_nln, self).__init__()
 
         self.convs = nn.Sequential(
             nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, stride=1, padding=1),
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     from torch.autograd import Variable
 
     img = Variable(torch.randn(1, 3, 224, 224))
-    net = NLN_CNN().cpu()
+    net = vgg_nln().cpu()
     output = net.forward(img)
     print output.shape
     # pass

@@ -1,9 +1,12 @@
 from dataloader.split_train_test_video import UCF101_splitter
 
-data_handler = UCF101_splitter('/hdd/NLN/UCF_list/', None)
-data_handler.get_action_index()
-class_to_idx = data_handler.action_label
-idx_to_class = {v: k for k, v in class_to_idx.iteritems()}
+
+def create_class_idx_dicts():
+    data_handler = UCF101_splitter('/hdd/NLN/UCF_list/', None)
+    data_handler.get_action_index()
+    class_to_idx = data_handler.action_label
+    idx_to_class = {v: k for k, v in class_to_idx.iteritems()}
+    return class_to_idx, idx_to_class
 
 
 def write_train_set(fname, idx_to_class, out_file):
@@ -61,11 +64,12 @@ def create_translation_dict(fname):
     return newi_to_oldi, oldi_to_newi
 
 
+class_to_idx, idx_to_class = create_class_idx_dicts()
 newi_to_oldi, oldi_to_newi = create_translation_dict('/hdd/NLN/UCF_list/truncated_classInd.txt')
 # create_new_class_idx('/hdd/NLN/UCF_list/truncated_classInd.txt', '/hdd/NLN/UCF_list/classInd.txt')
 # write_train_set('/hdd/NLN/UCF_list/trainlist00.txt', idx_to_class, '/hdd/NLN/UCF_list/trainlist04.txt')
 # write_test_set('/hdd/NLN/UCF_list/testlist00.txt', class_to_idx, '/hdd/NLN/UCF_list/testlist04.txt')
-convert_train_set('/hdd/NLN/UCF_list/trainlist04.txt', oldi_to_newi, '/hdd/NLN/UCF_list/trainlist05.txt')
+# convert_train_set('/hdd/NLN/UCF_list/trainlist04.txt', oldi_to_newi, '/hdd/NLN/UCF_list/trainlist05.txt')
 
 
 
