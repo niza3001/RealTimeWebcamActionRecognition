@@ -22,8 +22,6 @@ from network_vgg_nln import vgg_nln
 from network_resnet_nln import resnet50
 from dataloader.split_train_test_video import UCF101_splitter
 
-CHECKPOINT_PATH = '/hdd/NLN/record/checkpoint.pth.tar'
-BEST_PATH = '/hdd/NLN/record/model_best.pth.tar'
 parser = argparse.ArgumentParser(description='UCF101 Non-Local CNN')
 parser.add_argument('--cwd', default=os.getcwd(), type=str, metavar='CWD', help='curent working directory')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
@@ -31,7 +29,7 @@ parser.add_argument('--batch-size', default=2, type=int, metavar='N', help='mini
 parser.add_argument('--lr', default=1e-10, type=float, metavar='LR', help='initial warm up learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--demo', dest='demo', action='store_true', help='initialize inference on video source')
-parser.add_argument('--resume', default='/hdd/NLN/record/checkpoint.pth.tar', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
+parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 
 
@@ -48,7 +46,7 @@ def main():
                             BATCH_SIZE=arg.batch_size,
                             num_workers=8,
                             path='/hdd/UCF-101/Data/jpegs_256/',
-                            ucf_list='/hdd/NLN/UCF_list/',
+                            ucf_list=arg.cwd+'/UCF_list/',
                             ucf_split='05',
                             )
         train_loader, test_loader, test_video = data_loader.run()
@@ -211,7 +209,7 @@ class NLN_Trainer():
             # save model
             if is_best:
                 self.best_prec1 = prec1
-                with open('/hdd/NLN/record/spatial_video_preds.pickle', 'wb') as f:
+                with open(arg.cwd+'/record/spatial_video_preds.pickle', 'wb') as f:
                     pickle.dump(self.dic_video_level_preds, f)
                 f.close()
             
@@ -221,8 +219,8 @@ class NLN_Trainer():
                 'best_prec1': self.best_prec1,
                 'optimizer' : self.optimizer.state_dict()},
                 is_best,
-                '/hdd/NLN/record/checkpoint.pth.tar',
-                '/hdd/NLN/record/model_best.pth.tar')
+                arg.cwd+'/record/checkpoint.pth.tar',
+                arg.cwd+'/record/model_best.pth.tar')
 
     def train_1epoch(self):
         print('==> Epoch:[{0}/{1}][training stage]'.format(self.epoch, self.nb_epochs))
@@ -279,7 +277,7 @@ class NLN_Trainer():
                 'Prec@5':[round(top5.avg,4)],
                 'lr': self.optimizer.param_groups[0]['lr']
                 }
-        record_info(info, '/hdd/NLN/record/rgb_train.csv','train')
+        record_info(info, arg.cwd+'/record/rgb_train.csv','train')
 
     def validate_1epoch(self):
         print('==> Epoch:[{0}/{1}][validation stage]'.format(self.epoch, self.nb_epochs))
@@ -324,7 +322,7 @@ class NLN_Trainer():
                 'Loss':[round(video_loss, 5)],
                 'Prec@1':[round(video_top1, 3)],
                 'Prec@5':[round(video_top5, 3)]}
-        record_info(info, '/hdd/NLN/record/rgb_test.csv', 'test')
+        record_info(info, arg.cwd+'/record/rgb_test.csv', 'test')
         return video_top1, video_loss
 
     def frame2_video_level_accuracy(self):

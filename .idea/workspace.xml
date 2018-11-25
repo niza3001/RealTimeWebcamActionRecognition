@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2b5b97f0-745c-4ee9-9621-9509a72fb39e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataloader/spatial_dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataloader/spatial_dataloader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spatial_cnn_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/spatial_cnn_train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,73 +25,48 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="44" />
+          <entry key="py" value="45" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="44" />
+          <entry key="Python" value="45" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="12" />
-          <entry key="py" value="3207" />
+          <entry key="py" value="3276" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="3219" />
+          <entry key="Python" value="3288" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/network_resnet_nln.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/os_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="188" column="4" selection-start-line="188" selection-start-column="4" selection-end-line="188" selection-end-column="4" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="72">
+              <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="253" column="49" lean-forward="true" selection-start-line="253" selection-start-column="49" selection-end-line="253" selection-end-column="49" />
+            <state relative-caret-position="275">
+              <caret line="25" column="48" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="48" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="135" column="38" lean-forward="true" selection-start-line="135" selection-start-column="38" selection-end-line="135" selection-end-column="38" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-                <marker date="1543163456777" expanded="true" signature="3884:3893" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -109,7 +82,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>self.model</find>
       <find>nln_trainer</find>
       <find>eval</find>
       <find>resnet</find>
@@ -139,6 +111,7 @@
       <find>sample20</find>
       <find>batch</find>
       <find>target</find>
+      <find>hdd</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -161,6 +134,7 @@
         <option value="$PROJECT_DIR$/filter_classes.py" />
         <option value="$PROJECT_DIR$/dataloader/spatial_dataloader.py" />
         <option value="$PROJECT_DIR$/spatial_cnn_train.py" />
+        <option value="$PROJECT_DIR$/os_test.py" />
       </list>
     </option>
   </component>
@@ -356,14 +330,14 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49836245" weight="0.3294979" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49836245" visible="true" weight="0.39958158" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49563318" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4978166" weight="0.39958158" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4989083" weight="0.3294979" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5016376" side_tool="true" visible="true" weight="0.39958158" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49399564" weight="0.3294979" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5043668" side_tool="true" weight="0.3294979" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32985386" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -617,6 +591,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="154" column="47" selection-start-line="154" selection-start-column="47" selection-end-line="154" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <marker date="1543163456777" expanded="true" signature="3884:3893" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/network_resnet_nln.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="292">
@@ -627,24 +612,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
+    <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="135" column="38" lean-forward="true" selection-start-line="135" selection-start-column="38" selection-end-line="135" selection-end-column="38" />
+        <state relative-caret-position="275">
+          <caret line="25" column="48" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="48" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <marker date="1543163456777" expanded="true" signature="3884:3893" ph="..." />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
+    <entry file="file://$PROJECT_DIR$/os_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="253" column="49" lean-forward="true" selection-start-line="253" selection-start-column="49" selection-end-line="253" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="72">
+          <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
         </state>
       </provider>
     </entry>
