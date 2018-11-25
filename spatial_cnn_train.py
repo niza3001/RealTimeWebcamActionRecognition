@@ -27,11 +27,11 @@ BEST_PATH = '/hdd/NLN/record/model_best.pth.tar'
 parser = argparse.ArgumentParser(description='UCF101 Non-Local CNN')
 parser.add_argument('--cwd', default=os.getcwd(), type=str, metavar='CWD', help='curent working directory')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
-parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 8)')
-parser.add_argument('--lr', default=1e-3, type=float, metavar='LR', help='initial learning rate')
+parser.add_argument('--batch-size', default=2, type=int, metavar='N', help='mini-batch size (default: 8)')
+parser.add_argument('--lr', default=1e-10, type=float, metavar='LR', help='initial warm up learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--demo', dest='demo', action='store_true', help='initialize inference on video source')
-parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
+parser.add_argument('--resume', default='/hdd/NLN/record/checkpoint.pth.tar', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 
 
@@ -71,14 +71,15 @@ def main():
     else:
         # Start predicting action on video source (default: webcam)
         vs = cv2.VideoCapture(0)
-        model = NLN_Demo(vs=vs, resume=arg.resume)
+        model = NLN_Demo(vs=vs, resume=arg.resume, batch_size=arg.batch_size)
         model.inference(vs)
 
 
 class NLN_Demo():
 
-    def __init__(self, vs, resume):
+    def __init__(self, vs, resume, batch_size):
         # Create a dictionary of the classes and their corresponding indices
+        self.batch_size = batch_size
         self.data_handler = UCF101_splitter(arg.cwd+'/UCF_list/', None)
         self.data_handler.get_action_index()
         self.class_to_idx = self.data_handler.action_label
@@ -106,12 +107,12 @@ class NLN_Demo():
         while True:
             # read each frame and prepare it for feedforward in nn (resize and type)
             _, orig_frame = vs.read()
-            frame = self.transform(orig_frame).view(1, 3, 224, 224)
+            frame = self.transform(orig_frame).view(self.batch_size, 3, 224, 224)
 
             # feed the frame to the neural network
             nn_output += self.model(frame)
 
-            # vote for class with 10 consecutive frames
+            # vote for class with 20 consecutive frames
             if frame_count % 20 == 0:
                 nn_output = softmax(nn_output)
                 nn_output = nn_output.data.cpu().numpy()
@@ -162,8 +163,8 @@ class NLN_Trainer():
         # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
-        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=1, verbose=True)
-    
+        self.scheduler = None
+
     def resume_and_evaluate(self):
         if self.resume:
             if os.path.isfile(self.resume):
@@ -194,9 +195,19 @@ class NLN_Trainer():
             prec1, val_loss = self.validate_1epoch()
             is_best = prec1 > self.best_prec1
 
-            #lr_scheduler
-            self.scheduler.step(val_loss)
-            
+            # warm-up phase for pre-trained weights
+            if self.epoch <= 5:
+                self.lr *= 10
+                self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
+
+            # lr_scheduler
+            elif self.scheduler is None:
+                self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=1, verbose=True)
+                self.scheduler.step(val_loss)
+
+            else:
+                self.scheduler.step(val_loss)
+
             # save model
             if is_best:
                 self.best_prec1 = prec1
@@ -247,9 +258,9 @@ class NLN_Trainer():
 
             # measure accuracy and record loss
             prec1, prec5 = accuracy(output.data, label, topk=(1, 5))
-            losses.update(loss.data[0], data.size(0))
-            top1.update(prec1[0], data.size(0))
-            top5.update(prec5[0], data.size(0))
+            losses.update(loss.data[0])
+            top1.update(prec1[0])
+            top5.update(prec5[0])
 
             # compute gradient and do SGD step
             self.optimizer.zero_grad()

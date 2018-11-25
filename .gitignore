@@ -1,6 +1,5 @@
 *.pyc
 *.tar
 /venv/*
-*.pickle
 *.csv
 
