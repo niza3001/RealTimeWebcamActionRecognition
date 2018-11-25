@@ -26,8 +26,8 @@ CHECKPOINT_PATH = '/hdd/NLN/record/checkpoint.pth.tar'
 parser = argparse.ArgumentParser(description='UCF101 Non-Local CNN')
 parser.add_argument('--cwd', default=os.getcwd(), type=str, metavar='CWD', help='curent working directory')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
-parser.add_argument('--batch-size', default=2, type=int, metavar='N', help='mini-batch size (default: 2)')
-parser.add_argument('--lr', default=5e-4, type=float, metavar='LR', help='initial learning rate')
+parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 8)')
+parser.add_argument('--lr', default=1e-3, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--demo', dest='demo', action='store_true', help='initialize inference on video source')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
@@ -48,7 +48,7 @@ def main():
                             num_workers=8,
                             path='/hdd/UCF-101/Data/jpegs_256/',
                             ucf_list='/hdd/NLN/UCF_list/',
-                            ucf_split='00',
+                            ucf_split='05',
                             )
         train_loader, test_loader, test_video = data_loader.run()
 
@@ -86,7 +86,6 @@ class NLN_Demo():
         # load the same transformation mechanism on images like in training
         self.transform = transforms.Compose([
                 transforms.RandomCrop(224),
-                transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
@@ -100,7 +99,7 @@ class NLN_Demo():
         # Start looping on frames received from video source
         frame_count = 0
         softmax = torch.nn.Softmax()
-        nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32)
+        nn_output = torch.tensor(np.zeros((1, 34)), dtype=torch.float32)
 
         while True:
             # read each frame and prepare it for feedforward in nn (resize and type)
@@ -118,7 +117,7 @@ class NLN_Demo():
                 pred_classes = [(self.idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
 
                 # reset the process
-                nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32)
+                nn_output = torch.tensor(np.zeros((1, 34)), dtype=torch.float32)
 
             # extract the highest ranked prediction
 
@@ -160,8 +159,8 @@ class NLN_Trainer():
 
         # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), self.lr, momentum=0.9)
-        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=1, verbose=True, min_lr=1e-10)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
+        self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=3, verbose=True)
     
     def resume_and_evaluate(self):
         if self.resume:
@@ -235,7 +234,7 @@ class NLN_Trainer():
             target_var = Variable(label).cuda()
 
             # compute output
-            output = Variable(torch.zeros(len(data_dict['img1']), 101).float()).cuda()
+            output = Variable(torch.zeros(len(data_dict['img1']), 34).float()).cuda()
             for i in range(len(data_dict)):
                 key = 'img'+str(i)
                 data = data_dict[key]
@@ -317,7 +316,7 @@ class NLN_Trainer():
 
     def frame2_video_level_accuracy(self):
         correct = 0
-        video_level_preds = np.zeros((len(self.dic_video_level_preds),101))
+        video_level_preds = np.zeros((len(self.dic_video_level_preds),34))
         video_level_labels = np.zeros(len(self.dic_video_level_preds))
         ii=0
         for name in sorted(self.dic_video_level_preds.keys()):

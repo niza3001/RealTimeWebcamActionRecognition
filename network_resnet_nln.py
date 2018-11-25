@@ -186,9 +186,9 @@ def resnet34(pretrained=False, channel= 20, **kwargs):
     return model
 
 
-def resnet50(pretrained=False, channel= 20, **kwargs):
+def resnet50(pretrained=False, channel=3, **kwargs):
 
-    model = ResNet(Bottleneck, [3, 4, 6, 3], nb_classes=101, channel=channel, **kwargs)
+    model = ResNet(Bottleneck, [3, 4, 6, 3], nb_classes=34, channel=channel, **kwargs)
     if pretrained:
        pretrain_dict = model_zoo.load_url(model_urls['resnet50'])                  # modify pretrain code
        model_dict = model.state_dict()

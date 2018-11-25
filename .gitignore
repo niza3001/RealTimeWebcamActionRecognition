@@ -1,6 +1,6 @@
 *.pyc
 *.tar
 /venv/*
-/record/*
-record_resnet101/*
-record_vgg_nln/*
+*.pickle
+*.csv
+

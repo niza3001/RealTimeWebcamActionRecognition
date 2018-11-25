@@ -143,7 +143,7 @@ class spatial_dataloader():
 
     def validate(self):
         validation_set = spatial_dataset(dic=self.dic_testing, root_dir=self.data_path, mode='val', transform=transforms.Compose([
-                transforms.Resize([224, 224]),
+                transforms.RandomCrop(224),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                 ]))
@@ -163,6 +163,5 @@ if __name__ == '__main__':
     dataloader = spatial_dataloader(BATCH_SIZE=1, num_workers=1, 
                                 path='/hdd/UCF-101/Data/jpegs_256/',
                                 ucf_list='/hdd/NLN/UCF_list/',
-                                ucf_split='00')
+                                ucf_split='04')
     train_loader, val_loader, test_video = dataloader.run()
-    pass
