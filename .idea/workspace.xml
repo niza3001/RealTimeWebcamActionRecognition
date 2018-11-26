@@ -2,7 +2,44 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2b5b97f0-745c-4ee9-9621-9509a72fb39e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/record/spatial_video_preds.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/record/spatial_video_preds.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/.idea/NLN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/.idea/ACTION-CLS.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/Archive/network_resnet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/Archive/non_local_keras_block.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/Archive/nonlocal_resnet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/classInd.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/classInd.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/classInd_original.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist00.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist01.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist01.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist02.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist02.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist03.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist03.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist04.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/testlist05.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist00.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist01.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist01.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist02.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist02.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist03.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist03.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist04.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/trainlist05.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/UCF_list/truncated_classInd.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/dic/frame_count.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/dic/frame_count.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/spatial_dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/spatial_dataloader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/split_train_test_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/split_train_test_video.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/filter_classes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/network_resnet_nln.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/network_vgg_nln.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/non_local.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/non_local_simple_version.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/opencv_functional.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/opencv_transforms.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/record_resnet101/spatial_video_preds.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/record_resnet_50_101_classes/spatial_video_preds.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/record_vgg_nln/spatial_video_preds.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn_train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,25 +61,25 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="50" />
+          <entry key="py" value="60" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="50" />
+          <entry key="Python" value="60" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="12" />
-          <entry key="py" value="3293" />
+          <entry key="py" value="4005" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="3305" />
+          <entry key="Python" value="4017" />
         </counts>
       </usages-collector>
     </session>
@@ -50,13 +87,22 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
+        <entry file="file://$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="203" column="45" selection-start-line="203" selection-start-column="45" selection-end-line="203" selection-end-column="45" />
+            <state relative-caret-position="989">
+              <caret line="113" column="43" lean-forward="true" selection-start-line="113" selection-start-column="43" selection-end-line="113" selection-end-column="43" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../ACTION-CLS/dataloader/split_train_test_video.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -72,10 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>eval</find>
-      <find>resnet</find>
-      <find>resnet101</find>
-      <find>transform</find>
       <find>testlist</find>
       <find>crite</find>
       <find>sampling</find>
@@ -101,14 +143,18 @@
       <find>batch</find>
       <find>target</find>
       <find>root_dir</find>
+      <find>self.epoch</find>
+      <find>wi</find>
+      <find>eva</find>
       <find>hdd</find>
+      <find>transforms</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../ACTION-CLS" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -123,8 +169,12 @@
         <option value="$PROJECT_DIR$/dataloader/split_train_test_video.py" />
         <option value="$PROJECT_DIR$/filter_classes.py" />
         <option value="$PROJECT_DIR$/os_test.py" />
-        <option value="$PROJECT_DIR$/spatial_cnn_train.py" />
         <option value="$PROJECT_DIR$/dataloader/spatial_dataloader.py" />
+        <option value="$PROJECT_DIR$/spatial_cnn_train.py" />
+        <option value="$PROJECT_DIR$/../ACTION-CLS/TSN/dataloader/spatial_dataloader.py" />
+        <option value="$PROJECT_DIR$/../ACTION-CLS/TSN/spatial_cnn.py" />
+        <option value="$PROJECT_DIR$/../ACTION-CLS/dataloader/spatial_dataloader.py" />
+        <option value="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py" />
       </list>
     </option>
   </component>
@@ -144,13 +194,8 @@
         <subPane>
           <expand>
             <path>
-              <item name="NLN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NLN" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="NLN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NLN" type="462c0819:PsiDirectoryNode" />
-              <item name="dataloader" type="462c0819:PsiDirectoryNode" />
+              <item name="ACTION-CLS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ACTION-CLS" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -175,9 +220,30 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.spatial_cnn_train">
+  <component name="RunManager" selected="Python.spatial_cnn (1)">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="filter_classes" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="NLN" />
+      <module name="ACTION-CLS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -197,20 +263,41 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="network" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="NLN" />
+    <configuration name="spatial_cnn (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ACTION-CLS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../ACTION-CLS" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/network.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py" />
+      <option name="PARAMETERS" value="--resume $PROJECT_DIR$/../ACTION-CLS/record/spatial/model_best.pth.tar --evaluate" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="spatial_cnn" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../ACTION-CLS/TSN" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../ACTION-CLS/TSN/spatial_cnn.py" />
+      <option name="PARAMETERS" value="--resume $PROJECT_DIR$/../ACTION-CLS/TSN/record/spatial/model_best.pth.tar --evaluate" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -219,7 +306,7 @@
       <method v="2" />
     </configuration>
     <configuration name="spatial_cnn_train" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="NLN" />
+      <module name="ACTION-CLS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -239,29 +326,8 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="spatial_dataloader" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="NLN" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dataloader" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dataloader/spatial_dataloader.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="split_train_test_video" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="NLN" />
+      <module name="ACTION-CLS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -281,20 +347,107 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Nosetests">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_regexPattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Twisted Trial">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="py.test">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.spatial_cnn_train" />
-      <item itemvalue="Python.network" />
-      <item itemvalue="Python.spatial_dataloader" />
       <item itemvalue="Python.split_train_test_video" />
       <item itemvalue="Python.filter_classes" />
+      <item itemvalue="Python.spatial_cnn" />
+      <item itemvalue="Python.spatial_cnn (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.spatial_cnn (1)" />
+        <item itemvalue="Python.spatial_cnn" />
         <item itemvalue="Python.spatial_cnn_train" />
         <item itemvalue="Python.filter_classes" />
         <item itemvalue="Python.split_train_test_video" />
-        <item itemvalue="Python.spatial_dataloader" />
-        <item itemvalue="Python.network" />
       </list>
     </recent_temporary>
   </component>
@@ -313,20 +466,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49508733" visible="true" weight="0.3294979" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4978166" weight="0.39958158" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4989083" weight="0.3294979" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49126637" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4967249" weight="0.39958158" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49344978" weight="0.3294979" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5049127" side_tool="true" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49017468" weight="0.3294979" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50873363" side_tool="true" weight="0.3294979" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32985386" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -339,6 +493,7 @@
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/caffe2" />
+      <path value="$PROJECT_DIR$" />
     </ignored-roots>
   </component>
   <component name="XDebuggerManager">
@@ -354,6 +509,11 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
+      <expression>
+        <expression-string>path + 'frame{}.jpg'.format(str(index).zfill(6))</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>len(dic.keys())</expression-string>
         <language-id>Python</language-id>
@@ -412,49 +572,49 @@
     <entry file="file://$PROJECT_DIR$/caffe2/CMakeLists.txt" />
     <entry file="file://$PROJECT_DIR$/a.py" />
     <entry file="file://$PROJECT_DIR$/test.py" />
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/nn/modules/conv.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/nn/modules/conv.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="73">
           <caret line="289" column="17" selection-start-line="289" selection-start-column="17" selection-end-line="289" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/nn/functional.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/nn/functional.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="322">
           <caret line="395" selection-start-line="395" selection-end-line="395" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/nn/modules/module.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/nn/modules/module.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
           <caret line="243" column="19" selection-start-line="243" selection-start-column="19" selection-end-line="243" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/nn/modules/pooling.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/nn/modules/pooling.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-444">
           <caret line="80" column="6" selection-start-line="80" selection-start-column="6" selection-end-line="80" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/serialization.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/serialization.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="206" column="31" selection-start-line="206" selection-start-column="31" selection-end-line="206" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/torchsummary/torchsummary.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/lib/python2.7/site-packages/torchsummary/torchsummary.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/optim/optimizer.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/optim/optimizer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
@@ -498,7 +658,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/autograd/__init__.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/autograd/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1265">
           <caret line="100" column="59" lean-forward="true" selection-start-line="100" selection-start-column="59" selection-end-line="100" selection-end-column="59" />
@@ -532,21 +692,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/nn/modules/loss.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/nn/modules/loss.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
           <caret line="854" column="8" selection-start-line="854" selection-start-column="8" selection-end-line="854" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/torch/optim/lr_scheduler.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/optim/lr_scheduler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-792">
           <caret line="270" column="8" selection-start-line="270" selection-start-column="8" selection-end-line="270" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/local/lib/python2.7/site-packages/tqdm/_tqdm.py">
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/tqdm/_tqdm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="688" column="8" selection-start-line="688" selection-start-column="8" selection-end-line="688" selection-end-column="8" />
@@ -581,25 +741,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="17" column="21" lean-forward="true" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
-          <folding>
-            <marker date="1543154411081" expanded="true" signature="93:94" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="153" column="46" selection-start-line="153" selection-start-column="43" selection-end-line="153" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <marker date="1543166158948" expanded="true" signature="3877:3886" ph="..." />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dataloader/split_train_test_video.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -608,10 +754,91 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dataloader/spatial_dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2088">
+          <caret line="116" column="57" selection-start-line="116" selection-start-column="57" selection-end-line="116" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/spatial_cnn_train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="203" column="45" selection-start-line="203" selection-start-column="45" selection-end-line="203" selection-end-column="45" />
+        <state relative-caret-position="432">
+          <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/NLN/dataloader/spatial_dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="27" column="76" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="76" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/TSN/dataloader/spatial_dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-512">
+          <caret line="111" column="13" selection-start-line="111" selection-start-column="13" selection-end-line="111" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/NLN/spatial_cnn_train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="146" column="28" lean-forward="true" selection-start-line="146" selection-start-column="28" selection-end-line="146" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/TSN/spatial_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="72" column="36" lean-forward="true" selection-start-line="72" selection-start-column="36" selection-end-line="72" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/lib/python2.7/site-packages/PIL/Image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2093">
+          <caret line="2577" column="4" selection-start-line="2577" selection-start-column="4" selection-end-line="2577" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/dataloader/spatial_dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1016">
+          <caret line="84" column="33" selection-start-line="84" selection-start-column="33" selection-end-line="84" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/dataloader/split_train_test_video.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="989">
+          <caret line="113" column="43" lean-forward="true" selection-start-line="113" selection-start-column="43" selection-end-line="113" selection-end-column="43" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

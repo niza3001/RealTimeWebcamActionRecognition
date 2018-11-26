@@ -7,11 +7,9 @@ import pandas as pd
 import shutil
 from random import randint
 import numpy as np
-import config as cfg
-import os
+
 from torch.utils.data import Dataset, DataLoader
-import opencv_transforms as transforms
-# import torchvision.transforms as transforms
+import torchvision.transforms as transforms
 import torchvision.models as models
 import torch.nn as nn
 import torch
@@ -88,10 +86,5 @@ def record_info(info,filename,mode):
         df.to_csv(filename,index=False,columns=column_names)
     else: # else it exists so append without writing the header
         df.to_csv(filename,mode = 'a',header=False,index=False,columns=column_names)   
-
-
-def create_architecture():
-    if not os.path.exists(cfg.model_dir):
-        os.mkdir(cfg.model_dir)
 
 

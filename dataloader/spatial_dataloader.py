@@ -1,30 +1,33 @@
 import pickle
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
-import opencv_transforms as transforms
-# import torchvision.transforms as transforms
+import cv2
+from opencv_transforms import opencv_transforms as transforms
 import random
 from split_train_test_video import *
 from skimage import io, color, exposure
-import cv2
+import os
 
-
-class spatial_dataset(Dataset):
-
-    def __init__(self, BATCH_SIZE, dic, root_dir, mode, transform=None):
-
-        self.BATCH_SIZE = BATCH_SIZE
+class spatial_dataset(Dataset):  
+    def __init__(self, dic, root_dir, mode, transform=None):
+ 
         self.keys = dic.keys()
         self.values=dic.values()
         self.root_dir = root_dir
-        self.mode = mode
+        self.mode =mode
         self.transform = transform
 
     def __len__(self):
         return len(self.keys)
 
     def load_ucf_image(self,video_name, index):
-        path = self.root_dir + 'v_'+video_name+'/'
+        if video_name.split('_')[0] == 'HandstandPushups':
+            n,g = video_name.split('_',1)
+            name = 'HandstandPushups_'+g
+            path = self.root_dir + 'v_'+name+'/'
+        else:
+            path = self.root_dir + 'v_'+video_name+'/'
+         
         img = cv2.imread(path + 'frame{}.jpg'.format(str(index).zfill(6)), 1)
         transformed_img = self.transform(img)
 
@@ -35,9 +38,11 @@ class spatial_dataset(Dataset):
         if self.mode == 'train':
             video_name, nb_clips = self.keys[idx].split(' ')
             nb_clips = int(nb_clips)
-            starting_frame = random.randint(1, nb_clips-self.BATCH_SIZE)
-            clip = range(starting_frame, starting_frame + self.BATCH_SIZE)
-
+            clips = []
+            clips.append(random.randint(1, nb_clips/3))
+            clips.append(random.randint(nb_clips/3, nb_clips*2/3))
+            clips.append(random.randint(nb_clips*2/3, nb_clips+1))
+            
         elif self.mode == 'val':
             video_name, index = self.keys[idx].split(' ')
             index =abs(int(index))
@@ -49,20 +54,19 @@ class spatial_dataset(Dataset):
         
         if self.mode=='train':
             data ={}
-            for i in range(len(clip)):
+            for i in range(len(clips)):
                 key = 'img'+str(i)
-                index = clip[i]
+                index = clips[i]
                 data[key] = self.load_ucf_image(video_name, index)
                     
             sample = (data, label)
         elif self.mode=='val':
-            data = self.load_ucf_image(video_name, index)
+            data = self.load_ucf_image(video_name,index)
             sample = (video_name, data, label)
         else:
             raise ValueError('There are only train and val mode')
            
         return sample
-
 
 class spatial_dataloader():
     def __init__(self, BATCH_SIZE, num_workers, path, ucf_list, ucf_split):
@@ -77,44 +81,48 @@ class spatial_dataloader():
 
     def load_frame_count(self):
         #print '==> Loading frame number of each video'
-        with open(os.getcwd()+'/dataloader/dic/frame_count.pickle', 'rb') as file:
+        with open(os.getcwd()+'/dataloader/dic/frame_count.pickle','rb') as file:
             dic_frame = pickle.load(file)
         file.close()
 
         for line in dic_frame :
             videoname = line.split('_',1)[1].split('.',1)[0]
             n,g = videoname.split('_',1)
+            if n == 'HandStandPushups':
+                videoname = 'HandstandPushups_'+ g
             self.frame_count[videoname]=dic_frame[line]
 
     def run(self):
         self.load_frame_count()
         self.get_training_dic()
-        self.val_sample8()
+        self.val_sample20()
         train_loader = self.train()
         val_loader = self.validate()
 
         return train_loader, val_loader, self.test_video
 
     def get_training_dic(self):
+        #print '==> Generate frame numbers of each training video'
         self.dic_training={}
         for video in self.train_video:
-            nb_frame = self.frame_count[video]
+            #print videoname
+            nb_frame = self.frame_count[video]-10+1
             key = video+' '+ str(nb_frame)
             self.dic_training[key] = self.train_video[video]
                     
-    def val_sample8(self):
+    def val_sample20(self):
         print '==> sampling testing frames'
         self.dic_testing={}
         for video in self.test_video:
-            nb_frames = self.frame_count[video]
-            nb_frames = int(nb_frames)
-            starting_frame = random.randint(1, nb_frames-self.BATCH_SIZE)
-            for frame_idx in range(starting_frame, starting_frame + self.BATCH_SIZE):
-                key = video+ ' '+str(frame_idx)
+            nb_frame = self.frame_count[video]-10+1
+            interval = int(nb_frame/19)
+            for i in range(19):
+                frame = i*interval
+                key = video+ ' '+str(frame+1)
                 self.dic_testing[key] = self.test_video[video]      
 
     def train(self):
-        training_set = spatial_dataset(BATCH_SIZE=self.BATCH_SIZE, dic=self.dic_training, root_dir=self.data_path, mode='train', transform = transforms.Compose([
+        training_set = spatial_dataset(dic=self.dic_training, root_dir=self.data_path, mode='train', transform = transforms.Compose([
                 transforms.RandomCrop(224),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
@@ -131,10 +139,10 @@ class spatial_dataloader():
         return train_loader
 
     def validate(self):
-        validation_set = spatial_dataset(dic=self.dic_testing, BATCH_SIZE=self.BATCH_SIZE, root_dir=self.data_path, mode='val', transform=transforms.Compose([
-                transforms.RandomCrop(224),
+        validation_set = spatial_dataset(dic=self.dic_testing, root_dir=self.data_path, mode='val', transform = transforms.Compose([
+                transforms.Scale([224,224]),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                 ]))
         
         print '==> Validation data :',len(validation_set),'frames'
@@ -148,9 +156,13 @@ class spatial_dataloader():
         return val_loader
 
 
+
+
+
 if __name__ == '__main__':
+    
     dataloader = spatial_dataloader(BATCH_SIZE=1, num_workers=1, 
-                                path='/hdd/UCF-101/Data/jpegs_256/',
-                                ucf_list='/hdd/NLN/UCF_list/',
-                                ucf_split='05')
-    train_loader, val_loader, test_video = dataloader.run()
+                                path='/home/ubuntu/data/UCF101/spatial_no_sampled/', 
+                                ucf_list='/home/ubuntu/cvlab/pytorch/ucf101_two_stream/github/UCF_list/',
+                                ucf_split='01')
+    train_loader,val_loader,test_video = dataloader.run()
