@@ -2,4 +2,5 @@
 *.tar
 /venv/*
 *.csv
-
+/flownet2-docker/*
+/flownet2/*

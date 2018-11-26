@@ -8,7 +8,7 @@ import shutil
 from random import randint
 import argparse
 import cv2
-import opencv_transforms.opencv_transforms as transforms
+import torchvision.transforms as transforms
 import torchvision.models as models
 import torch.nn as nn
 import torch
@@ -19,6 +19,7 @@ import dataloader
 from utils import *
 from network import *
 from dataloader import UCF101_splitter
+import torchvision.transforms.functional as F
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
@@ -43,11 +44,11 @@ def main():
                         num_workers=8,
                         path='/hdd/UCF-101/Data/jpegs_256/',
                         ucf_list =os.getcwd()+'/UCF_list/',
-                        ucf_split ='01', 
+                        ucf_split ='01',
                         )
-    
+
     train_loader, test_loader, test_video = data_loader.run()
-    #Model 
+    #Model
     model = Spatial_CNN(
                         nb_epochs=arg.epochs,
                         lr=arg.lr,
@@ -79,9 +80,12 @@ class Spatial_CNN():
         self.demo = demo
 
     def webcam_inference(self):
+
+        frame_count = 0
+
         # config the transform to match the network's format
         transform = transforms.Compose([
-                transforms.Resize((256, 342)),
+                transforms.Resize((342, 256)),
                 transforms.RandomCrop(224),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
@@ -93,22 +97,33 @@ class Spatial_CNN():
         idx_to_class = {v: k for k, v in class_to_idx.iteritems()}
 
         # Start looping on frames received from webcam
-        vs = cv2.VideoCapture(0)
+        vs = cv2.VideoCapture(-1)
         softmax = torch.nn.Softmax()
+        nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cuda()
 
         while True:
             # read each frame and prepare it for feedforward in nn (resize and type)
-            _, orig_frame = vs.read()
-            frame = transform(orig_frame).view(1, 3, 224, 224)
+            ret, orig_frame = vs.read()
+            if ret is False:
+                print "Camera disconnected or not recognized by computer"
+                break
+
+            frame = cv2.cvtColor(orig_frame, cv2.COLOR_BGR2RGB)
+            frame = Image.fromarray(frame)
+            frame = transform(frame).view(1, 3, 224, 224).cuda()
 
             # feed the frame to the neural network
-            nn_output = self.model(frame)
+            nn_output += self.model(frame)
 
-            # retrieve top 5 classes
-            nn_output = softmax(nn_output)
-            nn_output = nn_output.data.cpu().numpy()
-            preds = nn_output.argsort()[0][-5:][::-1]
-            pred_classes = [(idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
+            # vote for class with 25 consecutive frames
+            if frame_count % 10 == 0:
+                nn_output = softmax(nn_output)
+                nn_output = nn_output.data.cpu().numpy()
+                preds = nn_output.argsort()[0][-5:][::-1]
+                pred_classes = [(idx_to_class[str(pred+1)], nn_output[0, pred]) for pred in preds]
+
+                # reset the process
+                nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cuda()
 
             # Display the resulting frame and the classified action
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -117,7 +132,9 @@ class Spatial_CNN():
                 y = y0 + i * dy
                 cv2.putText(orig_frame, '{} - {:.2f}'.format(pred_classes[i][0], pred_classes[i][1]),
                             (5, y), font, 1, (0, 0, 255), 2)
+
             cv2.imshow('frame', orig_frame)
+            frame_count += 1
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -134,7 +151,7 @@ class Spatial_CNN():
         self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.SGD(self.model.parameters(), self.lr, momentum=0.9)
         self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', patience=1,verbose=True)
-    
+
     def resume_and_evaluate(self):
         if self.resume:
             if os.path.isfile(self.resume):
@@ -154,6 +171,7 @@ class Spatial_CNN():
             return
 
         elif self.demo:
+            self.model.eval()
             self.webcam_inference()
 
     def run(self):
@@ -163,7 +181,7 @@ class Spatial_CNN():
 
         if self.evaluate or self.demo:
             return
-        
+
         for self.epoch in range(self.start_epoch, self.nb_epochs):
             self.train_1epoch()
             prec1, val_loss = self.validate_1epoch()
@@ -176,7 +194,7 @@ class Spatial_CNN():
                 with open('record/spatial/spatial_video_preds.pickle','wb') as f:
                     pickle.dump(self.dic_video_level_preds,f)
                 f.close()
-            
+
             save_checkpoint({
                 'epoch': self.epoch,
                 'state_dict': self.model.state_dict(),
@@ -192,16 +210,16 @@ class Spatial_CNN():
         top1 = AverageMeter()
         top5 = AverageMeter()
         #switch to train mode
-        self.model.train()    
+        self.model.train()
         end = time.time()
         # mini-batch training
         progress = tqdm(self.train_loader)
         for i, (data_dict,label) in enumerate(progress):
 
-    
+
             # measure data loading time
             data_time.update(time.time() - end)
-            
+
             label = label.cuda(async=True)
             target_var = Variable(label).cuda()
 
@@ -229,7 +247,7 @@ class Spatial_CNN():
             # measure elapsed time
             batch_time.update(time.time() - end)
             end = time.time()
-        
+
         info = {'Epoch':[self.epoch],
                 'Batch Time':[round(batch_time.avg,3)],
                 'Data Time':[round(data_time.avg,3)],
@@ -252,7 +270,7 @@ class Spatial_CNN():
         end = time.time()
         progress = tqdm(self.test_loader)
         for i, (keys,data,label) in enumerate(progress):
-            
+
             label = label.cuda(async=True)
             data_var = Variable(data, volatile=True).cuda(async=True)
             label_var = Variable(label, volatile=True).cuda(async=True)
@@ -273,7 +291,7 @@ class Spatial_CNN():
                     self.dic_video_level_preds[videoName] += preds[j,:]
 
         video_top1, video_top5, video_loss = self.frame2_video_level_accuracy()
-            
+
 
         info = {'Epoch':[self.epoch],
                 'Batch Time':[round(batch_time.avg,3)],
@@ -284,32 +302,32 @@ class Spatial_CNN():
         return video_top1, video_loss
 
     def frame2_video_level_accuracy(self):
-            
+
         correct = 0
         video_level_preds = np.zeros((len(self.dic_video_level_preds),101))
         video_level_labels = np.zeros(len(self.dic_video_level_preds))
         ii=0
         for name in sorted(self.dic_video_level_preds.keys()):
-        
+
             preds = self.dic_video_level_preds[name]
             label = int(self.test_video[name])-1
-                
+
             video_level_preds[ii,:] = preds
             video_level_labels[ii] = label
-            ii+=1         
+            ii+=1
             if np.argmax(preds) == (label):
                 correct+=1
 
         #top1 top5
         video_level_labels = torch.from_numpy(video_level_labels).long()
         video_level_preds = torch.from_numpy(video_level_preds).float()
-            
+
         top1,top5 = accuracy(video_level_preds, video_level_labels, topk=(1,5))
-        loss = self.criterion(Variable(video_level_preds).cuda(), Variable(video_level_labels).cuda())     
-                            
+        loss = self.criterion(Variable(video_level_preds).cuda(), Variable(video_level_labels).cuda())
+
         top1 = float(top1.numpy())
         top5 = float(top5.numpy())
-            
+
         #print(' * Video level Prec@1 {top1:.3f}, Video level Prec@5 {top5:.3f}'.format(top1=top1, top5=top5))
         return top1,top5,loss.data.cpu().numpy()
 

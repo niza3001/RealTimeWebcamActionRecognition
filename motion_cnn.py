@@ -6,7 +6,7 @@ import tqdm
 import shutil
 from random import randint
 import argparse
-
+import cv2
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 import torchvision.models as models
@@ -15,21 +15,22 @@ import torch
 import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
+from dataloader import UCF101_splitter
 from utils import *
 from network import *
 import dataloader
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser(description='UCF101 motion stream on resnet101')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
-parser.add_argument('--batch-size', default=64, type=int, metavar='N', help='mini-batch size (default: 64)')
+parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 64)')
 parser.add_argument('--lr', default=1e-2, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
+parser.add_argument('--demo', dest='demo', action='store_true', help='use model inference on video')
 
 def main():
     global arg
@@ -40,8 +41,8 @@ def main():
     data_loader = dataloader.Motion_DataLoader(
                         BATCH_SIZE=arg.batch_size,
                         num_workers=8,
-                        path='/home/ubuntu/data/UCF101/tvl1_flow/',
-                        ucf_list='/home/ubuntu/cvlab/pytorch/ucf101_two_stream/github/UCF_list/',
+                        path='/hdd/UCF-101/Data/optical-flow/',
+                        ucf_list=os.getcwd()+'/UCF_list/',
                         ucf_split='01',
                         in_channel=10,
                         )
@@ -61,13 +62,14 @@ def main():
                         lr=arg.lr,
                         batch_size=arg.batch_size,
                         channel = 10*2,
-                        test_video=test_video
+                        test_video=test_video,
+                        demo=arg.demo
                         )
     #Training
     model.run()
 
 class Motion_CNN():
-    def __init__(self, nb_epochs, lr, batch_size, resume, start_epoch, evaluate, train_loader, test_loader, channel,test_video):
+    def __init__(self, nb_epochs, lr, batch_size, resume, start_epoch, evaluate, train_loader, test_loader, channel, test_video, demo):
         self.nb_epochs=nb_epochs
         self.lr=lr
         self.batch_size=batch_size
@@ -79,13 +81,64 @@ class Motion_CNN():
         self.best_prec1=0
         self.channel=channel
         self.test_video=test_video
+        self.demo = demo
+
+    def webcam_inference(self):
+        frame_count = 0
+
+        # config the transform to match the network's format
+        transform = transforms.Compose([
+                transforms.Resize((256, 342)),
+                transforms.RandomCrop(224),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
+        # prepare the translation dictionary label-action
+        data_handler = UCF101_splitter(os.getcwd()+'/UCF_list/', None)
+        data_handler.get_action_index()
+        class_to_idx = data_handler.action_label
+        idx_to_class = {v: k for k, v in class_to_idx.iteritems()}
+
+        # Start looping on frames received from webcam
+        vs = cv2.VideoCapture(0)
+        softmax = torch.nn.Softmax()
+
+        while True:
+            # read each frame and prepare it for feedforward in nn (resize and type)
+            _, orig_frame = vs.read()
+            frame = cv2.cvtColor(orig_frame, cv2.COLOR_BGR2RGB)
+            frame = Image.fromarray(frame)
+            frame = transform(frame).cuda()
+            frame.unsqueeze_(0)
+
+            # feed the frame to the neural network
+            nn_output = self.model(frame)
+
+            # get top 5 predictions
+            nn_output = softmax(nn_output)
+            nn_output = nn_output.data.cpu().numpy()
+            preds = nn_output.argsort()[0][-5:][::-1]
+            pred_classes = [(idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
+
+            # Display the resulting frame and the classified action
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            y0, dy = 300, 40
+            for i in xrange(5):
+                y = y0 + i * dy
+                cv2.putText(orig_frame, '{} - {:.2f}'.format(pred_classes[i][0], pred_classes[i][1]),
+                            (5, y), font, 1, (0, 0, 255), 2)
+            cv2.imshow('frame', orig_frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # When everything done, release the capture
+        vs.release()
+        cv2.destroyAllWindows()
+
 
     def build_model(self):
         print ('==> Build model and setup loss and optimizer')
-        #build model
         self.model = resnet101(pretrained= True, channel=self.channel).cuda()
-        #print self.model
-        #Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.SGD(self.model.parameters(), self.lr, momentum=0.9)
         self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', patience=1,verbose=True)
@@ -107,11 +160,18 @@ class Motion_CNN():
             self.epoch=0
             prec1, val_loss = self.validate_1epoch()
             return
+
+        elif self.demo:
+            self.webcam_inference()
+
     
     def run(self):
         self.build_model()
         self.resume_and_evaluate()
         cudnn.benchmark = True
+
+        if self.evaluate or self.demo:
+            return
         
         for self.epoch in range(self.start_epoch, self.nb_epochs):
             self.train_1epoch()
