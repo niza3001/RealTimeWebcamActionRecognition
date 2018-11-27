@@ -3,17 +3,16 @@ import cv2
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import dataloader
 from utils import *
-from network import *
+from network import resnet101_nln
 from dataloader import UCF101_splitter
 from opt_flow import opt_flow_infer
-import timeit
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser(description='UCF101 spatial stream on resnet101')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
-parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 25)')
-parser.add_argument('--lr', default=5e-4, type=float, metavar='LR', help='initial learning rate')
+parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 32)')
+parser.add_argument('--lr', default=1e-15, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
@@ -86,10 +85,9 @@ class Spatial_CNN():
         # Start looping on frames received from webcam
         vs = cv2.VideoCapture(-1)
         softmax = torch.nn.Softmax()
+        nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cuda()
 
         while True:
-            # start = time.time()
-
             # read each frame and prepare it for feedforward in nn (resize and type)
             ret, orig_frame = vs.read()
 
@@ -97,26 +95,29 @@ class Spatial_CNN():
                 print "Camera disconnected or not recognized by computer"
                 break
 
-            # if frame_count == 0:
-            #     old_frame = orig_frame.copy()
-            #
-            # else:
-            #     optical_flow = opt_flow_infer(old_frame, orig_frame)
-            #     old_frame = orig_frame.copy()
+            if frame_count == 0:
+                old_frame = orig_frame.copy()
+
+            else:
+                optical_flow = opt_flow_infer(old_frame, orig_frame)
+                old_frame = orig_frame.copy()
 
             frame = cv2.cvtColor(orig_frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
-            frame = transform(frame).view(1, 3, 224, 224).cpu()
+            frame = transform(frame).view(1, 3, 224, 224).cuda()
 
             # feed the frame to the neural network
+            nn_output += self.model(frame)
 
-            # vote for class every 30 consecutive frames
+            # vote for class with 25 consecutive frames
             if frame_count % 10 == 0:
-                nn_output = self.model(frame).cpu()
                 nn_output = softmax(nn_output)
                 nn_output = nn_output.data.cpu().numpy()
                 preds = nn_output.argsort()[0][-5:][::-1]
                 pred_classes = [(idx_to_class[str(pred+1)], nn_output[0, pred]) for pred in preds]
+
+                # reset the process
+                nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cuda()
 
             # Display the resulting frame and the classified action
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -128,9 +129,6 @@ class Spatial_CNN():
 
             cv2.imshow('Webcam', orig_frame)
             frame_count += 1
-            # end = time.time()
-            # print (end - start)
-
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -138,13 +136,12 @@ class Spatial_CNN():
         vs.release()
         cv2.destroyAllWindows()
 
-
     def build_model(self):
         print ('==> Build model and setup loss and optimizer')
         #build model
-        self.model = resnet101(pretrained= True, channel=3).cpu()
+        self.model = resnet101_nln(pretrained=True, channel=3).cuda()
         #Loss function and optimizer
-        self.criterion = nn.CrossEntropyLoss().cpu()
+        self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.SGD(self.model.parameters(), self.lr, momentum=0.9)
         self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', patience=1,verbose=True)
 
@@ -182,12 +179,24 @@ class Spatial_CNN():
             self.train_1epoch()
             prec1, val_loss = self.validate_1epoch()
             is_best = prec1 > self.best_prec1
-            #lr_scheduler
-            self.scheduler.step(val_loss)
+
+            # warm-up phase for pre-trained weights
+            if self.epoch < 36:  # This is hard-coded for the last epoch in the best model
+                self.lr *= 10
+                self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
+
+            # lr_scheduler
+            elif self.scheduler is None:
+                self.scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor=0.33, patience=1, verbose=True)
+                self.scheduler.step(val_loss)
+
+            else:
+                self.scheduler.step(val_loss)
+
             # save model
             if is_best:
                 self.best_prec1 = prec1
-                with open('record/spatial/spatial_video_preds.pickle','wb') as f:
+                with open('record/spatial/nln/spatial_nln_video_preds.pickle','wb') as f:
                     pickle.dump(self.dic_video_level_preds,f)
                 f.close()
 
@@ -196,7 +205,7 @@ class Spatial_CNN():
                 'state_dict': self.model.state_dict(),
                 'best_prec1': self.best_prec1,
                 'optimizer' : self.optimizer.state_dict()
-            },is_best,'record/spatial/checkpoint.pth.tar','record/spatial/model_best.pth.tar')
+            },is_best,'record/spatial/nln/checkpoint.pth.tar','record/spatial/nln/model_best.pth.tar')
 
     def train_1epoch(self):
         print('==> Epoch:[{0}/{1}][training stage]'.format(self.epoch, self.nb_epochs))
@@ -216,15 +225,15 @@ class Spatial_CNN():
             # measure data loading time
             data_time.update(time.time() - end)
 
-            label = label.cpu(async=True)
-            target_var = Variable(label).cpu()
+            label = label.cuda(async=True)
+            target_var = Variable(label).cuda()
 
             # compute output
-            output = Variable(torch.zeros(len(data_dict['img1']),101).float()).cpu()
+            output = Variable(torch.zeros(len(data_dict['img1']),101).float()).cuda()
             for i in range(len(data_dict)):
                 key = 'img'+str(i)
                 data = data_dict[key]
-                input_var = Variable(data).cpu()
+                input_var = Variable(data).cuda()
                 output += self.model(input_var)
 
             loss = self.criterion(output, target_var)
@@ -252,7 +261,7 @@ class Spatial_CNN():
                 'Prec@5':[round(top5.avg,4)],
                 'lr': self.optimizer.param_groups[0]['lr']
                 }
-        record_info(info, 'record/spatial/rgb_train.csv','train')
+        record_info(info, 'record/spatial/nln/rgb_train.csv','train')
 
     def validate_1epoch(self):
         print('==> Epoch:[{0}/{1}][validation stage]'.format(self.epoch, self.nb_epochs))
@@ -267,9 +276,9 @@ class Spatial_CNN():
         progress = tqdm(self.test_loader)
         for i, (keys,data,label) in enumerate(progress):
 
-            label = label.cpu(async=True)
-            data_var = Variable(data, volatile=True).cpu(async=True)
-            label_var = Variable(label, volatile=True).cpu(async=True)
+            label = label.cuda(async=True)
+            data_var = Variable(data, volatile=True).cuda(async=True)
+            label_var = Variable(label, volatile=True).cuda(async=True)
 
             # compute output
             output = self.model(data_var)
@@ -294,7 +303,7 @@ class Spatial_CNN():
                 'Loss':[round(video_loss,5)],
                 'Prec@1':[round(video_top1,3)],
                 'Prec@5':[round(video_top5,3)]}
-        record_info(info, 'record/spatial/rgb_test.csv','test')
+        record_info(info, 'record/spatial/nln/rgb_test.csv','test')
         return video_top1, video_loss
 
     def frame2_video_level_accuracy(self):
@@ -319,14 +328,13 @@ class Spatial_CNN():
         video_level_preds = torch.from_numpy(video_level_preds).float()
 
         top1,top5 = accuracy(video_level_preds, video_level_labels, topk=(1,5))
-        loss = self.criterion(Variable(video_level_preds).cpu(), Variable(video_level_labels).cpu())
+        loss = self.criterion(Variable(video_level_preds).cuda(), Variable(video_level_labels).cuda())
 
         top1 = float(top1.numpy())
         top5 = float(top5.numpy())
 
         #print(' * Video level Prec@1 {top1:.3f}, Video level Prec@5 {top5:.3f}'.format(top1=top1, top5=top5))
         return top1,top5,loss.data.cpu().numpy()
-
 
 
 if __name__=='__main__':
