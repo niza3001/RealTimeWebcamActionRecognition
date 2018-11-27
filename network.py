@@ -1,10 +1,4 @@
-import torch.nn as nn
-import math
-import numpy as np
-import torch.utils.model_zoo as model_zoo
 import torch
-from torch.autograd import Variable
-
 import torch.nn as nn
 import math
 import torch.utils.model_zoo as model_zoo

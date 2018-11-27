@@ -1,5 +1,4 @@
-import os, pickle
-
+import os
 
 class UCF101_splitter():
     def __init__(self, path, split):

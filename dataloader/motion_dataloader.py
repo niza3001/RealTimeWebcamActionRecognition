@@ -1,20 +1,8 @@
-import numpy as np
-import pickle
 from PIL import Image
-import time
-import shutil
 import random
-import argparse
-
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
-import torchvision.models as models
-import torch.nn as nn
 import torch
-import torch.backends.cudnn as cudnn
-from torch.autograd import Variable
-from torch.optim.lr_scheduler import ReduceLROnPlateau
-
 from split_train_test_video import *
  
 class motion_dataset(Dataset):  

@@ -1,26 +1,10 @@
-import numpy as np
-import pickle
-import os
-from PIL import Image
-import time
-from tqdm import tqdm
-import shutil
-from random import randint
 import argparse
 import cv2
-import torchvision.transforms as transforms
-import torchvision.models as models
-import torch.nn as nn
-import torch
-import torch.backends.cudnn as cudnn
-from torch.autograd import Variable
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import dataloader
 from utils import *
 from network import *
 from dataloader import UCF101_splitter
-import torchvision.transforms.functional as F
-from pyflow.optf_inference import optf_infer
 from opt_flow import opt_flow_infer
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"

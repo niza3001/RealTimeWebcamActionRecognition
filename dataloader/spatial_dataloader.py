@@ -1,12 +1,10 @@
-import pickle
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
-import cv2
 import torchvision.transforms as transforms
 import random
 from split_train_test_video import *
-from skimage import io, color, exposure
 import os
+import pickle
 
 class spatial_dataset(Dataset):  
     def __init__(self, dic, root_dir, mode, transform=None):
