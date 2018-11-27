@@ -3,14 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2b5b97f0-745c-4ee9-9621-9509a72fb39e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../ACTION-CLS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/average_fusion.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/average_fusion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/motion_dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/motion_dataloader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/spatial_dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/spatial_dataloader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/dataloader/split_train_test_video.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/dataloader/split_train_test_video.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/motion_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/motion_cnn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/network.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +26,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="md" value="1" />
-          <entry key="py" value="87" />
+          <entry key="py" value="88" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
@@ -41,7 +34,7 @@
         <counts>
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Python" value="87" />
+          <entry key="Python" value="88" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -86,17 +79,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../ACTION-CLS/dataloader/motion_dataloader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ACTION-CLS/network.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="12" selection-start-column="12" selection-end-column="12" />
+            <state relative-caret-position="144">
+              <caret line="8" column="47" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="47" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -114,10 +101,9 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py">
+        <entry file="file://$PROJECT_DIR$/../ACTION-CLS/spatial_cnn_gpu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5472">
-              <caret line="304" lean-forward="true" selection-start-line="304" selection-end-line="304" />
+            <state>
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -157,7 +143,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>validate</find>
       <find>plate</find>
       <find>Data</find>
       <find>plat</find>
@@ -186,6 +171,7 @@
       <find>done!</find>
       <find>video</find>
       <find>demo</find>
+      <find>cuda</find>
       <find>cuda()</find>
     </findStrings>
     <dirStrings>
@@ -268,7 +254,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.spatial_cnn">
+  <component name="RunManager" selected="Python.spatial_cnn_gpu">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="ACTION-CLS" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -395,7 +381,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="spatial_cnn" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="spatial_cnn_cpu" type="PythonConfigurationType" factoryName="Python">
       <module name="ACTION-CLS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -407,7 +393,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn_cpu.py" />
+      <option name="PARAMETERS" value="--resume $PROJECT_DIR$/../ACTION-CLS/record/spatial/model_best.pth.tar --demo" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="spatial_cnn_gpu" type="PythonConfigurationType" factoryName="Python">
+      <module name="ACTION-CLS" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../ACTION-CLS" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../ACTION-CLS/spatial_cnn_gpu.py" />
       <option name="PARAMETERS" value="--resume $PROJECT_DIR$/../ACTION-CLS/record/spatial/model_best.pth.tar --demo" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -526,15 +533,15 @@
     </configuration>
     <list>
       <item itemvalue="Python.main.py" />
+      <item itemvalue="Python.spatial_cnn_gpu" />
+      <item itemvalue="Python.spatial_cnn_cpu" />
+      <item itemvalue="Python.read_flo" />
       <item itemvalue="Python.spatial_cnn_train" />
-      <item itemvalue="Python.spatial_cnn" />
       <item itemvalue="Python.motion_cnn" />
       <item itemvalue="Python.setup" />
-      <item itemvalue="Python.read_flo" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.spatial_cnn" />
         <item itemvalue="Python.read_flo" />
         <item itemvalue="Python.spatial_cnn_train" />
         <item itemvalue="Python.setup" />
@@ -660,7 +667,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test.py" />
     <entry file="file://$PROJECT_DIR$/../ACTION-CLS/venv/local/lib/python2.7/site-packages/torch/nn/modules/conv.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="73">
@@ -989,13 +995,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../ACTION-CLS/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -1011,13 +1010,6 @@
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/dataloader/motion_dataloader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1050,8 +1042,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../ACTION-CLS/spatial_cnn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5472">
-          <caret line="304" lean-forward="true" selection-start-line="304" selection-end-line="304" />
+        <state relative-caret-position="882">
+          <caret line="49" column="4" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/network.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-895">
+          <caret line="101" column="21" selection-start-line="101" selection-start-column="21" selection-end-line="101" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/dataloader/motion_dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="47" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ACTION-CLS/spatial_cnn_gpu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
