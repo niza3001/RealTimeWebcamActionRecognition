@@ -84,11 +84,12 @@ class Motion_CNN():
         self.demo = demo
 
     def webcam_inference(self):
+
         frame_count = 0
 
         # config the transform to match the network's format
         transform = transforms.Compose([
-                transforms.Resize((256, 342)),
+                transforms.Resize((342, 256)),
                 transforms.RandomCrop(224),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
@@ -100,25 +101,33 @@ class Motion_CNN():
         idx_to_class = {v: k for k, v in class_to_idx.iteritems()}
 
         # Start looping on frames received from webcam
-        vs = cv2.VideoCapture(0)
+        vs = cv2.VideoCapture(-1)
         softmax = torch.nn.Softmax()
+        nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cuda()
 
         while True:
             # read each frame and prepare it for feedforward in nn (resize and type)
-            _, orig_frame = vs.read()
+            ret, orig_frame = vs.read()
+            if ret is False:
+                print "Camera disconnected or not recognized by computer"
+                break
+
             frame = cv2.cvtColor(orig_frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
-            frame = transform(frame).cuda()
-            frame.unsqueeze_(0)
+            frame = transform(frame).view(1, 3, 224, 224).cuda()
 
             # feed the frame to the neural network
-            nn_output = self.model(frame)
+            nn_output += self.model(frame)
 
-            # get top 5 predictions
-            nn_output = softmax(nn_output)
-            nn_output = nn_output.data.cpu().numpy()
-            preds = nn_output.argsort()[0][-5:][::-1]
-            pred_classes = [(idx_to_class[str(pred)], nn_output[0, pred]) for pred in preds]
+            # vote for class with 25 consecutive frames
+            if frame_count % 10 == 0:
+                nn_output = softmax(nn_output)
+                nn_output = nn_output.data.cpu().numpy()
+                preds = nn_output.argsort()[0][-5:][::-1]
+                pred_classes = [(idx_to_class[str(pred+1)], nn_output[0, pred]) for pred in preds]
+
+                # reset the process
+                nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cuda()
 
             # Display the resulting frame and the classified action
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -127,7 +136,9 @@ class Motion_CNN():
                 y = y0 + i * dy
                 cv2.putText(orig_frame, '{} - {:.2f}'.format(pred_classes[i][0], pred_classes[i][1]),
                             (5, y), font, 1, (0, 0, 255), 2)
+
             cv2.imshow('frame', orig_frame)
+            frame_count += 1
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -162,9 +173,9 @@ class Motion_CNN():
             return
 
         elif self.demo:
+            self.model.eval()
             self.webcam_inference()
 
-    
     def run(self):
         self.build_model()
         self.resume_and_evaluate()
@@ -319,6 +330,7 @@ class Motion_CNN():
         top5 = float(top5.numpy())
             
         return top1,top5,loss.data.cpu().numpy()
+
 
 if __name__=='__main__':
     main()

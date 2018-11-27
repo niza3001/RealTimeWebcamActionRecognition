@@ -20,6 +20,8 @@ from utils import *
 from network import *
 from dataloader import UCF101_splitter
 import torchvision.transforms.functional as F
+from pyflow.optf_inference import optf_infer
+from opt_flow import opt_flow_infer
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
@@ -104,9 +106,17 @@ class Spatial_CNN():
         while True:
             # read each frame and prepare it for feedforward in nn (resize and type)
             ret, orig_frame = vs.read()
+
             if ret is False:
                 print "Camera disconnected or not recognized by computer"
                 break
+
+            if frame_count == 0:
+                old_frame = orig_frame.copy()
+
+            else:
+                optical_flow = opt_flow_infer(old_frame, orig_frame)
+                old_frame = orig_frame.copy()
 
             frame = cv2.cvtColor(orig_frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
@@ -133,7 +143,7 @@ class Spatial_CNN():
                 cv2.putText(orig_frame, '{} - {:.2f}'.format(pred_classes[i][0], pred_classes[i][1]),
                             (5, y), font, 1, (0, 0, 255), 2)
 
-            cv2.imshow('frame', orig_frame)
+            cv2.imshow('Webcam', orig_frame)
             frame_count += 1
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
