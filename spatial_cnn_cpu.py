@@ -6,6 +6,7 @@ from utils import *
 from network import *
 from dataloader import UCF101_splitter
 from opt_flow import opt_flow_infer
+import timeit
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
@@ -88,6 +89,8 @@ class Spatial_CNN():
         nn_output = torch.tensor(np.zeros((1, 101)), dtype=torch.float32).cpu()
 
         while True:
+            # start = time.time()
+
             # read each frame and prepare it for feedforward in nn (resize and type)
             ret, orig_frame = vs.read()
 
@@ -95,12 +98,12 @@ class Spatial_CNN():
                 print "Camera disconnected or not recognized by computer"
                 break
 
-            if frame_count == 0:
-                old_frame = orig_frame.copy()
-
-            else:
-                optical_flow = opt_flow_infer(old_frame, orig_frame)
-                old_frame = orig_frame.copy()
+            # if frame_count == 0:
+            #     old_frame = orig_frame.copy()
+            #
+            # else:
+            #     optical_flow = opt_flow_infer(old_frame, orig_frame)
+            #     old_frame = orig_frame.copy()
 
             frame = cv2.cvtColor(orig_frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
@@ -129,6 +132,9 @@ class Spatial_CNN():
 
             cv2.imshow('Webcam', orig_frame)
             frame_count += 1
+            # end = time.time()
+            # print (end - start)
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
