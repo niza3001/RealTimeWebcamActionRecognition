@@ -1,4 +1,4 @@
-# Non Local Network Implementation on the UCF-101 dataset
+# Non Local Network implementation on the UCF-101 dataset
 This repository is a modification of the Two-Stream network based on this Jeffrey Huang's work:  
 https://github.com/jeffreyhuang1/two-stream-action-recognition  
 Also utilizing AlexHex7's PyTorch implementation of the Non-Local Block to enhance the spatial CNN of the Two-Stream network  
