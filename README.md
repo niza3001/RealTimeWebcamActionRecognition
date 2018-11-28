@@ -16,9 +16,9 @@ If you just want to run inference download the pre-trained model here:
 [Link to ResNet101 trained on UCF-101](https://drive.google.com/drive/folders/1gVB5StqgoDJ3IxHUn7zoTzTNxzz3du3d?usp=sharing)
 
 Then run
-'''
+```
 python spatial_cnn_gpu --resume /PATH/TO/model_best.pth.tar --demo
-'''
+```
 You can run a cpu only version just by changing the script's name to spatial_cnn_cpu.py
 The best real-time results come from running only the Spatial CNN without the Temporal Stream on a GPU
 
