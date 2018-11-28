@@ -13,7 +13,7 @@ The main added feature of this repository is adding an inference method to the n
 If you want to train the model from scratch you need to download the UCF-101 data, I recommend visiting Jefferey's Huang repository linked above and follow his detailed instructions.
 
 If you just want to run inference download the pre-trained model here:  
-* [Spatial resent101](https://drive.google.com/drive/folders/1gVB5StqgoDJ3IxHUn7zoTzTNxzz3du3d?usp=sharing)
+[Link to ResNet101 trained on UCF-101](https://drive.google.com/drive/folders/1gVB5StqgoDJ3IxHUn7zoTzTNxzz3du3d?usp=sharing)
 
 Then run
 '''
