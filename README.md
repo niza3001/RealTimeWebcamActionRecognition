@@ -7,7 +7,7 @@ https://github.com/AlexHex7/Non-local_pytorch/blob/master/Non-Local_pytorch_0.3.
 The main added feature of this repository is adding an inference method to the networks so you can see the model's predictions
 (Top-5 and their score) in real-time on a webcam feed
 
-![alt text](https://raw.githubusercontent.com/danbochman/Non-Local-Network-UCF-101/master/demo/screenshot.png)
+![alt text](https://raw.githubusercontent.com/danbochman/Real-Time-Action-Recognition/master/demo/screenshot.png)
 
 ## Usage
 If you want to train the model from scratch you need to download the UCF-101 data, I recommend visiting Jefferey's Huang repository linked above and follow his detailed instructions.
