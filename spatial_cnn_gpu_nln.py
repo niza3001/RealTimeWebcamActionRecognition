@@ -12,7 +12,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 parser = argparse.ArgumentParser(description='UCF101 spatial stream on resnet101')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
 parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 32)')
-parser.add_argument('--lr', default=1e-15, type=float, metavar='LR', help='initial learning rate')
+parser.add_argument('--lr', default=1e-5, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
@@ -181,7 +181,7 @@ class Spatial_CNN():
             is_best = prec1 > self.best_prec1
 
             # warm-up phase for pre-trained weights
-            if self.epoch < 36:  # This is hard-coded for the last epoch in the best model
+            if self.epoch < 1:  # This is hard-coded for the last epoch in the best model
                 self.lr *= 10
                 self.optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
 

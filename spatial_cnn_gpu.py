@@ -3,7 +3,7 @@ import cv2
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import dataloader
 from utils import *
-from network import *
+from network import resnet101
 from dataloader import UCF101_splitter
 from opt_flow import opt_flow_infer
 
@@ -140,7 +140,7 @@ class Spatial_CNN():
     def build_model(self):
         print ('==> Build model and setup loss and optimizer')
         #build model
-        self.model = resnet101(pretrained= True, channel=3).cuda()
+        self.model = resnet101(pretrained=True, channel=3).cuda()
         #Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss().cuda()
         self.optimizer = torch.optim.SGD(self.model.parameters(), self.lr, momentum=0.9)

@@ -133,6 +133,9 @@ class ResNetNLN(nn.Module):
         for i in range(1, blocks):
             layers.append(block(self.inplanes, planes))
 
+        # add the NLN Block to layer
+        layers.append(NONLocalBlock2D(planes * block.expansion))
+
         return nn.Sequential(*layers)
 
     def forward(self, x):
@@ -154,7 +157,7 @@ class ResNetNLN(nn.Module):
 
 class ResNet(nn.Module):
 
-    def __init__(self, block, layers, nb_classes=101, channel=20):
+    def __init__(self, block, layers, nb_classes=101, channel=3):
         self.inplanes = 64
         super(ResNet, self).__init__()
         self.conv1_custom = nn.Conv2d(channel, 64, kernel_size=7, stride=2, padding=3,   
@@ -191,8 +194,6 @@ class ResNet(nn.Module):
         for i in range(1, blocks):
             layers.append(block(self.inplanes, planes))
 
-        # add the NLN Block to layer
-        layers.append(NONLocalBlock2D(planes * block.expansion))
 
         return nn.Sequential(*layers)
 
@@ -249,7 +250,7 @@ def resnet50(pretrained=False, channel= 20, **kwargs):
     return model
 
 
-def resnet101(pretrained=False, channel= 20, **kwargs):
+def resnet101(pretrained=False, channel=3, **kwargs):
 
     model = ResNet(Bottleneck, [3, 4, 23, 3],nb_classes=101, channel=channel, **kwargs)
     if pretrained:
