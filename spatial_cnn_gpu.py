@@ -24,35 +24,49 @@ def main():
     arg = parser.parse_args()
     print arg
 
-    #Prepare DataLoader
-    data_loader = dataloader.spatial_dataloader(
-                        BATCH_SIZE=arg.batch_size,
-                        num_workers=8,
-                        path='/hdd/UCF-101/Data/jpegs_256/',
-                        ucf_list =os.getcwd()+'/UCF_list/',
-                        ucf_split ='01',
-                        )
+    if not arg.demo:
+        #Prepare DataLoader
+        data_loader = dataloader.spatial_dataloader(
+                            BATCH_SIZE=arg.batch_size,
+                            num_workers=8,
+                            path='/hdd/UCF-101/Data/jpegs_256/',
+                            ucf_list =os.getcwd()+'/UCF_list/',
+                            ucf_split ='01',
+                            )
 
-    train_loader, test_loader, test_video = data_loader.run()
-    #Model
-    model = Spatial_CNN(
-                        nb_epochs=arg.epochs,
-                        lr=arg.lr,
-                        batch_size=arg.batch_size,
-                        resume=arg.resume,
-                        start_epoch=arg.start_epoch,
-                        evaluate=arg.evaluate,
-                        train_loader=train_loader,
-                        test_loader=test_loader,
-                        test_video=test_video,
-                        demo=arg.demo
-    )
-    #Training
+        train_loader, test_loader, test_video = data_loader.run()
+
+        #Model
+        model = Spatial_CNN(
+                            nb_epochs=arg.epochs,
+                            lr=arg.lr,
+                            batch_size=arg.batch_size,
+                            resume=arg.resume,
+                            start_epoch=arg.start_epoch,
+                            evaluate=arg.evaluate,
+                            demo=arg.demo,
+                            train_loader=train_loader,
+                            test_loader=test_loader,
+                            test_video=test_video)
+    else:
+        #Model
+        model = Spatial_CNN(
+                            nb_epochs=arg.epochs,
+                            lr=arg.lr,
+                            batch_size=arg.batch_size,
+                            resume=arg.resume,
+                            start_epoch=arg.start_epoch,
+                            evaluate=arg.evaluate,
+                            demo=arg.demo)
+
+
+
+    # Run
     model.run()
 
 
 class Spatial_CNN():
-    def __init__(self, nb_epochs, lr, batch_size, resume, start_epoch, evaluate, train_loader, test_loader, test_video, demo):
+    def __init__(self, nb_epochs, lr, batch_size, resume, start_epoch, evaluate,  demo, train_loader=None, test_loader=None, test_video=None):
         self.nb_epochs=nb_epochs
         self.lr=lr
         self.batch_size=batch_size
