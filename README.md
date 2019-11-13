@@ -1,4 +1,4 @@
-# Non Local Network implementation on the UCF-101 dataset
+# Real-time Pretend Play Action Recognition on Webcam Stream
 This repository is a modification of this repository:
 https://github.com/danbochman/Real-Time-Action-Recognition
 
