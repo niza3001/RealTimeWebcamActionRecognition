@@ -29,11 +29,11 @@ def draw_hsv(flow):
 
 
 def opt_flow_infer(prev, img):
-
+    print (prev)
     prev_gray = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
 
     cur_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    flow = cv2.calcOpticalFlowFarneback(prev_gray, cur_gray, 1, 0.5, 3, 15, 3, 5, 1.2, 0)
+    flow = cv2.calcOpticalFlowFarneback(prev_gray, cur_gray,0.5, 3, 15, 3, 5, 1.2, 0, 1)
 
     cv2.imshow('flow', draw_flow(cur_gray, flow))
     cv2.imshow('flow HSV', draw_hsv(flow))

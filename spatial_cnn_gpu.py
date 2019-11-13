@@ -29,7 +29,7 @@ def main():
         data_loader = dataloader.spatial_dataloader(
                             BATCH_SIZE=arg.batch_size,
                             num_workers=8,
-                            path='/hdd/UCF-101/Data/jpegs_256/',
+                            path='/home/niloofar/Work/Real-Time-Action-Recognition/UCF-101/',
                             ucf_list =os.getcwd()+'/UCF_list/',
                             ucf_split ='01',
                             )
@@ -63,6 +63,8 @@ def main():
 
     # Run
     model.run()
+
+
 
 
 class Spatial_CNN():
@@ -220,6 +222,7 @@ class Spatial_CNN():
         #switch to train mode
         self.model.train()
         end = time.time()
+
         # mini-batch training
         progress = tqdm(self.train_loader)
         for i, (data_dict,label) in enumerate(progress):
@@ -243,10 +246,13 @@ class Spatial_CNN():
 
             # measure accuracy and record loss
             prec1, prec5 = accuracy(output.data, label, topk=(1, 5))
-            losses.update(loss.data[0], data.size(0))
-            top1.update(prec1[0], data.size(0))
-            top5.update(prec5[0], data.size(0))
+            # losses.update(loss.data[0], data.size(0))
+            # top1.update(prec1[0], data.size(0))
+            # top5.update(prec5[0], data.size(0))
 
+            losses.update(loss.data, data.size(0))
+            top1.update(prec1, data.size(0))
+            top5.update(prec5, data.size(0))
             # compute gradient and do SGD step
             self.optimizer.zero_grad()
             loss.backward()
@@ -277,26 +283,30 @@ class Spatial_CNN():
         self.dic_video_level_preds={}
         end = time.time()
         progress = tqdm(self.test_loader)
-        for i, (keys,data,label) in enumerate(progress):
+        with torch.no_grad():
+            for i, (keys,data,label) in enumerate(progress):
 
-            label = label.cuda(async=True)
-            data_var = Variable(data, volatile=True).cuda(async=True)
-            label_var = Variable(label, volatile=True).cuda(async=True)
+                label = label.cuda(async=True)
+                # data_var = Variable(data, volatile=True).cuda(async=True)
+                # label_var = Variable(label, volatile=True).cuda(async=True)
 
-            # compute output
-            output = self.model(data_var)
-            # measure elapsed time
-            batch_time.update(time.time() - end)
-            end = time.time()
-            #Calculate video level prediction
-            preds = output.data.cpu().numpy()
-            nb_data = preds.shape[0]
-            for j in range(nb_data):
-                videoName = keys[j].split('/',1)[0]
-                if videoName not in self.dic_video_level_preds.keys():
-                    self.dic_video_level_preds[videoName] = preds[j,:]
-                else:
-                    self.dic_video_level_preds[videoName] += preds[j,:]
+                data_var = Variable(data).cuda(async=True)
+                label_var = Variable(label).cuda(async=True)
+
+                # compute output
+                output = self.model(data_var)
+                # measure elapsed time
+                batch_time.update(time.time() - end)
+                end = time.time()
+                #Calculate video level prediction
+                preds = output.data.cpu().numpy()
+                nb_data = preds.shape[0]
+                for j in range(nb_data):
+                    videoName = keys[j].split('/',1)[0]
+                    if videoName not in self.dic_video_level_preds.keys():
+                        self.dic_video_level_preds[videoName] = preds[j,:]
+                    else:
+                        self.dic_video_level_preds[videoName] += preds[j,:]
 
         video_top1, video_top5, video_loss = self.frame2_video_level_accuracy()
 
