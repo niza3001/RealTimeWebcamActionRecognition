@@ -29,7 +29,7 @@ def main():
         data_loader = dataloader.spatial_dataloader(
                             BATCH_SIZE=arg.batch_size,
                             num_workers=8,
-                            path='/home/niloofar/Work/Real-Time-Action-Recognition/UCF-101/',
+                            path='/home/niloofar/Work/Data/UCF-101/',
                             ucf_list =os.getcwd()+'/UCF_list/',
                             ucf_split ='01',
                             )
