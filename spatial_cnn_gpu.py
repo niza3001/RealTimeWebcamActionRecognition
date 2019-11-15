@@ -262,6 +262,7 @@ class Spatial_CNN():
             batch_time.update(time.time() - end)
             end = time.time()
 
+        #Save details in csv
         info = {'Epoch':[self.epoch],
                 'Batch Time':[round(batch_time.avg,3)],
                 'Data Time':[round(data_time.avg,3)],
