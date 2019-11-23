@@ -227,10 +227,16 @@ class Spatial_CNN():
         progress = tqdm(self.train_loader)
         for i, (data_dict,label) in enumerate(progress):
 
-
+            # my_label = []
             # measure data loading time
             data_time.update(time.time() - end)
-
+            # my_label.append[label[12]]
+            # my_label.append[label[12]]
+            # my_label.append[label[12]]
+            # my_label.append[label[12]]
+            # my_label.append[label[12]]
+            # my_target_var = Variable(my_label).cuda()
+            # print
             label = label.cuda(async=True)
             target_var = Variable(label).cuda()
 
@@ -241,8 +247,14 @@ class Spatial_CNN():
                 data = data_dict[key]
                 input_var = Variable(data).cuda()
                 output += self.model(input_var)
-
+                # my_output += ...
+                # --> 0-8
+            # ---------------  original 101 class loss
             loss = self.criterion(output, target_var)
+            
+            # ---------------  my loss: 8 class --> cpu
+
+            # loss = self.criterion(my_output, my_target_var)
 
             # measure accuracy and record loss
             prec1, prec5 = accuracy(output.data, label, topk=(1, 5))
@@ -326,18 +338,73 @@ class Spatial_CNN():
         video_level_preds = np.zeros((len(self.dic_video_level_preds),101))
         video_level_labels = np.zeros(len(self.dic_video_level_preds))
         ii=0
+        myCount=0
+        c8=[]
+        c24=[]
+        c26=[]
+        c68=[]
+        c72=[]
+        c93=[]
+        c98=[]
+        c101=[]
         for name in sorted(self.dic_video_level_preds.keys()):
 
             preds = self.dic_video_level_preds[name]
             label = int(self.test_video[name])-1
 
+
             video_level_preds[ii,:] = preds
             video_level_labels[ii] = label
             ii+=1
-            if np.argmax(preds) == (label):
+            if label in [7,23,25,67,71,92,97,100]:
+                # print "File name is: "
+                # print name
+                # print "Label is: "
+                # print int(self.test_video[name])
+                myCount+=1
+     # 8:HoldObj --- 24: WalkIn ---26: WalkOut --- 68: Stand --- 72: PickUp --- 93: PlaceObj -- 98: WalkAround -- 101: Talk
+            if np.argmax(preds) == (label) and label in [7,23,25,67,71,92,97,100]:
                 correct+=1
+            elif label in [7,23,25,67,71,92,97,100] and np.argmax(preds) != (label):
+                val=np.argmax(preds)+1
+                #print val
+                if label==7:
+                    #print "here1"
+                    c8+=[val]
+                elif label==23:
+                    #print "here2"
+                    c24+=[val]
+                elif label==25:
+                    #print "here3"
+                    c26+=[val]
+                elif label==67:
+                    c68+=[val]
+                elif label==71:
+                    c72+=[val]
+                elif label==92:
+                    c93+=[val]
+                elif label==97:
+                    c98+=[val]
+                elif label==100:
+                    c101+=[val]
+        #         print "Label is: "
+        #         print label+1
+        #         print "incorrectly predicted as: "
+        #         print np.argmax(preds)
+        # print "My correct is: "
+        # print correct
+        # print "My Total is: "
+        # print myCount
+        # print "holdObj: ",c8
+        # print "WalkIn: ",c24
+        # print "WalkOut: ",c26
+        # print "Stand: ",c68
+        # print "PickUp: ",c72
+        # print "Placeobj: ",c93
+        # print "WalkAround: ",c98
+        # print "Talk: ",c101
 
-        #top1 top5 some random change here
+        #top1 top5
         video_level_labels = torch.from_numpy(video_level_labels).long()
         video_level_preds = torch.from_numpy(video_level_preds).float()
 

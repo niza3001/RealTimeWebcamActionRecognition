@@ -40,9 +40,9 @@ class UCF101_splitter():
         for line in content:
             #print line
             video = line.split('/',1)[1].split(' ',1)[0]
-            print video
+            # print video
             key = video.split('_',1)[1].split('.',1)[0]
-            print key
+            # print key
             label = self.action_label[line.split('/')[0]]   
             dic[key] = int(label)
             #print key,label

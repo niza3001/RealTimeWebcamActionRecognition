@@ -103,7 +103,7 @@ class spatial_dataloader():
     def get_training_dic(self):
         #print '==> Generate frame numbers of each training video'
         self.dic_training={}
-        print self.train_video
+        # print self.train_video
         for video in self.train_video:
             #print videoname
             nb_frame = self.frame_count[video]-10+1
