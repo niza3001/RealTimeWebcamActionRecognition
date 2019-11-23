@@ -337,7 +337,7 @@ class Spatial_CNN():
             if np.argmax(preds) == (label):
                 correct+=1
 
-        #top1 top5
+        #top1 top5 some random change here
         video_level_labels = torch.from_numpy(video_level_labels).long()
         video_level_preds = torch.from_numpy(video_level_preds).float()
 
