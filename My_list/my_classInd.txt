@@ -1,0 +1,7 @@
+1 Bend
+2 HandUp
+3 Sit
+4 WalkBack
+5 WalkFront
+6 WalkLeft
+7 WalkRight

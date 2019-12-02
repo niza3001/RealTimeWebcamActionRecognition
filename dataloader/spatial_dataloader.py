@@ -2,7 +2,8 @@ from PIL import Image
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 import random
-from split_train_test_video import *
+# from split_train_test_video import *
+from my_split_train_test import *
 import os
 import pickle
 
@@ -45,6 +46,13 @@ class spatial_dataset(Dataset):
         elif self.mode == 'val':
             video_name, index = self.keys[idx].split(' ')
             index =abs(int(index))
+            #clips = []
+            # video_name, nb_clips = self.keys[idx].split(' ')
+            # nb_clips = int(nb_clips)
+            # clips = []
+            # clips.append(random.randint(1, nb_clips/3))
+            # clips.append(random.randint(nb_clips/3, nb_clips*2/3))
+            # clips.append(random.randint(nb_clips*2/3, nb_clips+1))
         else:
             raise ValueError('There are only train and val mode')
 
@@ -57,7 +65,6 @@ class spatial_dataset(Dataset):
                 key = 'img'+str(i)
                 index = clips[i]
                 data[key] = self.load_ucf_image(video_name, index)
-
             sample = (data, label)
         elif self.mode=='val':
             data = self.load_ucf_image(video_name,index)
@@ -75,7 +82,8 @@ class spatial_dataloader():
         self.data_path=path
         self.frame_count ={}
         # split the training and testing videos
-        splitter = UCF101_splitter(path=ucf_list,split=ucf_split)
+        # splitter = UCF101_splitter(path=ucf_list,split=ucf_split)
+        splitter = my_splitter(path=ucf_list,split=ucf_split)
         self.train_video, self.test_video = splitter.split_video()
 
     def load_frame_count(self):
@@ -146,7 +154,9 @@ class spatial_dataloader():
                 ]))
 
         print '==> Validation data :',len(validation_set),'frames'
+        # (3, 224, 224) means RGB, 224x224
         print validation_set[1][1].size()
+        # print validation_set[1][0]['img1'].size()
 
         val_loader = DataLoader(
             dataset=validation_set,

@@ -10,7 +10,7 @@ from opt_flow import opt_flow_infer
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser(description='UCF101 spatial stream on resnet101')
-parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
+parser.add_argument('--epochs', default=300, type=int, metavar='N', help='number of total epochs')
 parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 32)')
 parser.add_argument('--lr', default=0.1, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
@@ -220,7 +220,6 @@ class Spatial_CNN():
         # mini-batch training
         progress = tqdm(self.train_loader)
         for i, (data_dict,label) in enumerate(progress):
-
 
             # measure data loading time
             data_time.update(time.time() - end)
