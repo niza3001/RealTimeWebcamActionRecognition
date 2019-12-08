@@ -12,8 +12,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser(description='UCF101 spatial stream on resnet101')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
-parser.add_argument('--batch-size', default=5, type=int, metavar='N', help='mini-batch size (default: 25)')
-parser.add_argument('--batch-size-my', default=3, type=int, metavar='N', help='mini-batch size for new dataset')
+parser.add_argument('--batch-size', default=3, type=int, metavar='N', help='mini-batch size (default: 25)')
+parser.add_argument('--batch-size-my', default=5, type=int, metavar='N', help='mini-batch size for new dataset')
 parser.add_argument('--lr', default=5e-4, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
@@ -230,7 +230,7 @@ class Spatial_CNN():
             # save model
             if is_best:
                 self.best_prec1 = prec1
-                with open('record/test7/spatial_video_preds.pickle','wb') as f:
+                with open('record/test9/spatial_video_preds.pickle','wb') as f:
                     pickle.dump(self.my_dic_video_level_preds,f)
                 f.close()
 
@@ -239,7 +239,7 @@ class Spatial_CNN():
                 'state_dict': self.model.state_dict(),
                 'best_prec1': self.best_prec1,
                 'optimizer' : self.optimizer.state_dict()
-            },is_best,'record/test7/checkpoint.pth.tar','record/test7/model_best.pth.tar')
+            },is_best,'record/test9/checkpoint.pth.tar','record/test9/model_best.pth.tar')
 
     def train_1epoch(self):
         print('==> Epoch:[{0}/{1}][training stage]'.format(self.epoch, self.nb_epochs))
@@ -252,10 +252,6 @@ class Spatial_CNN():
         self.model.train()
         end = time.time()
 
-        # mini-batch training
-        # progress = tqdm(self.train_loader)
-        # progress_my = tqdm(self.train_loader_my)
-        # 
         self.train_loader.dataset.offset = np.random.randint(len(self.train_loader.dataset))
 
         # for i, (data_dict,label) in enumerate(progress_my):
@@ -298,11 +294,8 @@ class Spatial_CNN():
             loss_ucf = self.criterion(output, target_var)
             prec1,prec5  = accuracy(output.data, label, topk=(1, 5))
 
-            # ---------------  Total Loss -------------
-            # if self.epoch < 50:
-            #     loss = loss_my + loss_ucf;
-            # else: 
-            loss = loss_my + 0.5*loss_ucf;
+            
+            loss = loss_my + 0.3*loss_ucf;
 
             losses.update(loss.data, data.size(0))
             top1.update(prec1_my, data.size(0))
@@ -326,7 +319,7 @@ class Spatial_CNN():
                 'UCFPrec':[round(top5.avg,4)],
                 'lr': self.optimizer.param_groups[0]['lr']
                 }
-        record_info(info, 'record/test7/rgb_train.csv','train')
+        record_info(info, 'record/test9/rgb_train.csv','train')
 
     def validate_1epoch(self):
         print('==> Epoch:[{0}/{1}][validation stage]'.format(self.epoch, self.nb_epochs))
@@ -376,6 +369,18 @@ class Spatial_CNN():
                 loss_sum_my += batch_loss_my
                 prec1_sum_my += batch_prec1_my
 
+
+                #Calculate MY video level prediction
+                my_preds = output.data.cpu().numpy()
+                my_nb_data = my_preds.shape[0]
+                for j in range(my_nb_data):
+                    videoName = keys[j].split('/',1)[0]
+                    if videoName not in self.my_dic_video_level_preds.keys():
+                        self.my_dic_video_level_preds[videoName] = my_preds[j,:]
+                    else:
+                        self.my_dic_video_level_preds[videoName] += my_preds[j,:]
+
+
         #----------------------------UCF Data--------------------------------------------
                 keys = ucf_batch[0]
                 data = ucf_batch[1]
@@ -398,28 +403,43 @@ class Spatial_CNN():
                 loss_sum_ucf += batch_loss_ucf
                 prec1_sum_ucf += batch_prec1_ucf
 
+                #Calculate MY video level prediction
+                ucf_preds = output.data.cpu().numpy()
+                ucf_nb_data = ucf_preds.shape[0]
+                for j in range(ucf_nb_data):
+                    videoName = keys[j].split('/',1)[0]
+                    if videoName not in self.ucf_dic_video_level_preds.keys():
+                        self.ucf_dic_video_level_preds[videoName] = ucf_preds[j,:]
+                    else:
+                        self.ucf_dic_video_level_preds[videoName] += ucf_preds[j,:]
+
                 batch_count += 1
 
 
         loss_my = loss_sum_my/batch_count
         loss_ucf = loss_sum_ucf/batch_count
-        total_loss = loss_my + 0.5*loss_ucf
+        total_loss = loss_my + 0.3*loss_ucf
 
         prec1_my = prec1_sum_my/batch_count
         prec1_ucf = prec1_sum_ucf/batch_count
+
+        my_video_top1, ucf_video_top1, total_video_loss = self.frame2_video_level_accuracy()
+        print "My Video Level Accuracy Is: ", my_video_top1
+        print "UCF Video Level Accuracy Is: ", ucf_video_top1
+
 
         info = {'Epoch':[self.epoch],
                 'Batch Time':[round(batch_time.avg,3)],
                 'Loss':[round(total_loss,5)],
                 'MyPrec':[round(prec1_my,4)],
                 'UCFPrec':[round(prec1_ucf,4)]}
-        record_info(info, 'record/test7/rgb_test.csv','test')
+        record_info(info, 'record/test9/rgb_test.csv','test')
         return prec1_my, total_loss
 
     def frame2_video_level_accuracy(self):
 
-        my_correct = 0
-        ucf_correct = 0
+        my_video_correct = 0
+        ucf_video_correct = 0
         my_video_level_preds = np.zeros((len(self.my_dic_video_level_preds),101))
         my_video_level_labels = np.zeros(len(self.my_dic_video_level_preds))
 
@@ -437,7 +457,7 @@ class Spatial_CNN():
             ucf_video_level_labels[ii] = label
             ii+=1
             if np.argmax(preds) == (label):
-                ucf_correct+=1
+                ucf_video_correct+=1
 
         for name in sorted(self.my_dic_video_level_preds.keys()):
 
@@ -448,39 +468,39 @@ class Spatial_CNN():
             my_video_level_labels[jj] = label
             jj+=1
             if np.argmax(preds) == (label):
-                my_correct+=1
+                my_video_correct+=1
 
         #top1 top5 and loss for my data
         my_video_level_labels = torch.from_numpy(my_video_level_labels).long()
         my_video_level_preds = torch.from_numpy(my_video_level_preds).float()
 
-        my_top1,my_top5 = accuracy(my_video_level_preds, my_video_level_labels, topk=(1,5))
-        my_loss = self.criterion(Variable(my_video_level_preds).cuda(), Variable(my_video_level_labels).cuda())
+        my_video_top1,my_video_top5 = accuracy(my_video_level_preds, my_video_level_labels, topk=(1,5))
+        my_video_loss = self.criterion(Variable(my_video_level_preds).cuda(), Variable(my_video_level_labels).cuda())
 
-        my_top1 = float(my_top1.numpy())
-        my_top5 = float(my_top5.numpy())
+        my_video_top1 = float(my_video_top1.numpy())
+        my_video_top5 = float(my_video_top5.numpy())
 
 
         #top1 top5 and loss for ucf data
         ucf_video_level_labels = torch.from_numpy(ucf_video_level_labels).long()
         ucf_video_level_preds = torch.from_numpy(ucf_video_level_preds).float()
         
-        ucf_top1,ucf_top5 = accuracy(ucf_video_level_preds, ucf_video_level_labels, topk=(1,5))
-        ucf_loss = self.criterion(Variable(ucf_video_level_preds).cuda(), Variable(ucf_video_level_labels).cuda())
+        ucf_video_top1,ucf_video_top5 = accuracy(ucf_video_level_preds, ucf_video_level_labels, topk=(1,5))
+        ucf_video_loss = self.criterion(Variable(ucf_video_level_preds).cuda(), Variable(ucf_video_level_labels).cuda())
 
-        ucf_top1 = float(ucf_top1.numpy())
-        ucf_top5 = float(ucf_top5.numpy())
+        ucf_video_top1 = float(ucf_video_top1.numpy())
+        ucf_video_top5 = float(ucf_video_top5.numpy())
 
         # print "my correct is ",my_correct
         # print "UCF correct is ", ucf_correct
 
-        loss = my_loss + ucf_loss
+        video_loss = my_video_loss + ucf_video_loss
 
         # top1 = float(top1.numpy())
         # top5 = float(top5.numpy())
 
         #print(' * Video level Prec@1 {top1:.3f}, Video level Prec@5 {top5:.3f}'.format(top1=top1, top5=top5))
-        return my_top1,ucf_top1,loss.data.cpu().numpy()
+        return my_video_top1,ucf_video_top1,video_loss.data.cpu().numpy()
 
 
 

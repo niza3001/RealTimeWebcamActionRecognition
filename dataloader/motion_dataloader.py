@@ -4,6 +4,7 @@ from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 import torch
 from split_train_test_video import *
+import pickle
 
 class motion_dataset(Dataset):
     def __init__(self, dic, in_channel, root_dir, mode, transform=None):
@@ -90,7 +91,7 @@ class Motion_DataLoader():
 
     def load_frame_count(self):
         #print '==> Loading frame number of each video'
-        with open(os.getcwd()+'/dataloader/dic/frame_count.pickle','rb') as file:
+        with open(os.getcwd()+'/dataloader/dic/frame_count_motion.pickle','rb') as file:
             dic_frame = pickle.load(file)
         file.close()
 

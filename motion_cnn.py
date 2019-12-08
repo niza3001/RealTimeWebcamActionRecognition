@@ -6,12 +6,14 @@ from dataloader import UCF101_splitter
 from utils import *
 from network import *
 import dataloader
+from dataloader import my_splitter
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser(description='UCF101 motion stream on resnet101')
 parser.add_argument('--epochs', default=500, type=int, metavar='N', help='number of total epochs')
-parser.add_argument('--batch-size', default=8, type=int, metavar='N', help='mini-batch size (default: 64)')
+parser.add_argument('--batch-size', default=3, type=int, metavar='N', help='mini-batch size (default: 25)')
+parser.add_argument('--batch-size-my', default=5, type=int, metavar='N', help='mini-batch size for new dataset')
 parser.add_argument('--lr', default=1e-2, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
@@ -26,48 +28,64 @@ def main():
     #Prepare DataLoader
     data_loader = dataloader.Motion_DataLoader(
                         BATCH_SIZE=arg.batch_size,
-                        num_workers=8,
-                        path='/hdd/UCF-101/Data/optical-flow/',
+                        num_workers=4,
+                        path='/home/niloofar/Work/Data/Motion/UCF-101/',
                         ucf_list=os.getcwd()+'/UCF_list/',
+                        ucf_split='01',
+                        in_channel=10,
+                        )
+    data_loader_my = dataloader.Motion_DataLoader(
+                        BATCH_SIZE=arg.batch_size_my,
+                        num_workers=4,
+                        path='/home/niloofar/Work/Data/Motion/UCF-101/',
+                        ucf_list=os.getcwd()+'/My_list/',
                         ucf_split='01',
                         in_channel=10,
                         )
     
     train_loader,test_loader, test_video = data_loader.run()
+    train_loader_my, test_loader_my, test_video_my = data_loader_my.run()
     #Model 
     model = Motion_CNN(
-                        # Data Loader
-                        train_loader=train_loader,
-                        test_loader=test_loader,
-                        # Utility
-                        start_epoch=arg.start_epoch,
-                        resume=arg.resume,
-                        evaluate=arg.evaluate,
-                        # Hyper-parameter
                         nb_epochs=arg.epochs,
                         lr=arg.lr,
                         batch_size=arg.batch_size,
+                        batch_size_my=arg.batch_size_my,
+                        resume=arg.resume,
+                        start_epoch=arg.start_epoch,
+                        evaluate=arg.evaluate,
+                        demo=arg.demo,
                         channel = 10*2,
+                        train_loader=train_loader,
+                        train_loader_my=train_loader_my,
+                        test_loader=test_loader,
+                        test_loader_my=test_loader_my,
                         test_video=test_video,
-                        demo=arg.demo
+                        test_video_my=test_video_my
                         )
     #Training
     model.run()
 
 class Motion_CNN():
-    def __init__(self, nb_epochs, lr, batch_size, resume, start_epoch, evaluate, train_loader, test_loader, channel, test_video, demo):
+    def __init__(self, nb_epochs, lr, batch_size,batch_size_my, resume, start_epoch, evaluate,  demo, channel, train_loader=None, train_loader_my=None, test_loader=None, test_loader_my=None, test_video=None, test_video_my=None):
         self.nb_epochs=nb_epochs
         self.lr=lr
         self.batch_size=batch_size
+        self.batch_size_my=batch_size_my
         self.resume=resume
         self.start_epoch=start_epoch
         self.evaluate=evaluate
         self.train_loader=train_loader
+        self.train_loader_my=train_loader_my
         self.test_loader=test_loader
+        self.test_loader_my=test_loader_my
         self.best_prec1=0
         self.channel=channel
         self.test_video=test_video
+        self.test_video_my=test_video_my
         self.demo = demo
+
+        
 
     def webcam_inference(self):
 
@@ -202,26 +220,42 @@ class Motion_CNN():
         self.model.train()    
         end = time.time()
         # mini-batch training
-        progress = tqdm(self.train_loader)
-        for i, (data,label) in enumerate(progress):
+        # progress = tqdm(self.train_loader)
+        for (my_batch,ucf_batch) in tqdm(zip(self.train_loader_my, self.train_loader)):
 
-            # measure data loading time
             data_time.update(time.time() - end)
-            
+
+            # ---------------  My Loss -------------
+            data_dict = my_batch[0]
+            label = my_batch[1]
+
             label = label.cuda(async=True)
-            input_var = Variable(data).cuda()
             target_var = Variable(label).cuda()
+            input_var = Variable(data_dict).cuda()
 
-            # compute output
             output = self.model(input_var)
-            loss = self.criterion(output, target_var)
+            loss_my = self.criterion(output, target_var)
+            prec1_my,prec5_my = accuracy(output.data, label, topk=(1, 5))
+            
+            # ---------------  UCF Loss -------------
+            data_dict = ucf_batch[0]
+            label = ucf_batch[1]
 
-            # measure accuracy and record loss
-            prec1, prec5 = accuracy(output.data, label, topk=(1, 5))
-            losses.update(loss.data[0], data.size(0))
-            top1.update(prec1[0], data.size(0))
-            top5.update(prec5[0], data.size(0))
+            label = label.cuda(async=True)
+            target_var = Variable(label).cuda()
+            input_var = Variable(data_dict).cuda()
+            
+            output = self.model(input_var)           
+            loss_ucf = self.criterion(output, target_var)
+            prec1,prec5  = accuracy(output.data, label, topk=(1, 5))
 
+            
+            loss = loss_my + 0.3*loss_ucf;
+
+            losses.update(loss.data, data_dict.size(0))
+            top1.update(prec1_my, data_dict.size(0))
+            top5.update(prec1, data_dict.size(0))
+            # top5.update(prec5, data.size(0))
             # compute gradient and do SGD step
             self.optimizer.zero_grad()
             loss.backward()
@@ -235,88 +269,193 @@ class Motion_CNN():
                 'Batch Time':[round(batch_time.avg,3)],
                 'Data Time':[round(data_time.avg,3)],
                 'Loss':[round(losses.avg,5)],
-                'Prec@1':[round(top1.avg,4)],
-                'Prec@5':[round(top5.avg,4)],
+                'MyPrec':[round(top1.avg,4)],
+                'UCFPrec':[round(top5.avg,4)],
                 'lr': self.optimizer.param_groups[0]['lr']
                 }
-        record_info(info, 'record/motion/opf_train.csv','train')
+        record_info(info, 'record/m_test1/opf_train.csv','train')
 
     def validate_1epoch(self):
         print('==> Epoch:[{0}/{1}][validation stage]'.format(self.epoch, self.nb_epochs))
-
         batch_time = AverageMeter()
         losses = AverageMeter()
-        top1 = AverageMeter()
-        top5 = AverageMeter()
+        my_top1 = AverageMeter()
+        my_top5 = AverageMeter()
+
+        ucf_top1 = AverageMeter()
+        ucf_top5 = AverageMeter()
         # switch to evaluate mode
         self.model.eval()
-        self.dic_video_level_preds={}
+        self.my_dic_video_level_preds={}
+        self.ucf_dic_video_level_preds={}
         end = time.time()
-        progress = tqdm(self.test_loader)
-        for i, (keys,data,label) in enumerate(progress):
+        batch_count = 0
+        loss_sum_my = 0
+        prec1_sum_my = 0
+        loss_sum_ucf = 0
+        prec1_sum_ucf = 0
+
+
+        with torch.no_grad():
+            for (my_batch,ucf_batch) in tqdm(zip(self.test_loader_my, self.test_loader)):
             
-            #data = data.sub_(127.353346189).div_(14.971742063)
-            label = label.cuda(async=True)
-            data_var = Variable(data, volatile=True).cuda(async=True)
-            label_var = Variable(label, volatile=True).cuda(async=True)
+    
+                #----------------------------My Data--------------------------------------------
 
-            # compute output
-            output = self.model(data_var)
+                keys = my_batch[0]
+                data = my_batch[1]
+                label = my_batch[2]
+                
+                label = label.cuda(async=True)
+                data_var = Variable(data).cuda(async=True)
+                target_var = Variable(label).cuda(async=True)
 
-            # measure elapsed time
-            batch_time.update(time.time() - end)
-            end = time.time()
-            #Calculate video level prediction
-            preds = output.data.cpu().numpy()
-            nb_data = preds.shape[0]
-            for j in range(nb_data):
-                videoName = keys[j].split('-',1)[0] # ApplyMakeup_g01_c01
-                if videoName not in self.dic_video_level_preds.keys():
-                    self.dic_video_level_preds[videoName] = preds[j,:]
-                else:
-                    self.dic_video_level_preds[videoName] += preds[j,:]
+                # compute output
+                output = self.model(data_var)
+
+                # measure elapsed time
+                batch_time.update(time.time() - end)
+                end = time.time()
+
+                #Frame-level accuracy and loss
+                batch_loss_my = self.criterion(output, target_var)
+                batch_prec1_my,batch_prec5_my = accuracy(output.data, label, topk=(1, 5))
+
+                loss_sum_my += batch_loss_my
+                prec1_sum_my += batch_prec1_my
+
+
+                #Calculate MY video level prediction
+                my_preds = output.data.cpu().numpy()
+                my_nb_data = my_preds.shape[0]
+                for j in range(my_nb_data):
+                    videoName = keys[j].split('/',1)[0]
+                    if videoName not in self.my_dic_video_level_preds.keys():
+                        self.my_dic_video_level_preds[videoName] = my_preds[j,:]
+                    else:
+                        self.my_dic_video_level_preds[videoName] += my_preds[j,:]
+
+
+        #----------------------------UCF Data--------------------------------------------
+                keys = ucf_batch[0]
+                data = ucf_batch[1]
+                label = ucf_batch[2]
+
+                label = label.cuda(async=True)
+                data_var = Variable(data).cuda(async=True)
+                target_var = Variable(label).cuda(async=True)
+
+                # compute output
+                output = self.model(data_var)
+                # measure elapsed time
+                batch_time.update(time.time() - end)
+                end = time.time()
+
+                #Frame-level accuracy and loss
+                batch_loss_ucf = self.criterion(output, target_var)
+                batch_prec1_ucf,batch_prec5_ucf  = accuracy(output.data, label, topk=(1, 5))
+
+                loss_sum_ucf += batch_loss_ucf
+                prec1_sum_ucf += batch_prec1_ucf
+
+                #Calculate MY video level prediction
+                ucf_preds = output.data.cpu().numpy()
+                ucf_nb_data = ucf_preds.shape[0]
+                for j in range(ucf_nb_data):
+                    videoName = keys[j].split('/',1)[0]
+                    if videoName not in self.ucf_dic_video_level_preds.keys():
+                        self.ucf_dic_video_level_preds[videoName] = ucf_preds[j,:]
+                    else:
+                        self.ucf_dic_video_level_preds[videoName] += ucf_preds[j,:]
+
+                batch_count += 1
                     
         #Frame to video level accuracy
-        video_top1, video_top5, video_loss = self.frame2_video_level_accuracy()
+        loss_my = loss_sum_my/batch_count
+        loss_ucf = loss_sum_ucf/batch_count
+        total_loss = loss_my + 0.3*loss_ucf
+
+        prec1_my = prec1_sum_my/batch_count
+        prec1_ucf = prec1_sum_ucf/batch_count
+
+        my_video_top1, ucf_video_top1, total_video_loss = self.frame2_video_level_accuracy()
+        print "My Video Level Accuracy Is: ", my_video_top1
+        print "UCF Video Level Accuracy Is: ", ucf_video_top1
+
+
         info = {'Epoch':[self.epoch],
                 'Batch Time':[round(batch_time.avg,3)],
-                'Loss':[round(video_loss,5)],
-                'Prec@1':[round(video_top1,3)],
-                'Prec@5':[round(video_top5,3)]
-                }
-        record_info(info, 'record/motion/opf_test.csv','test')
-        return video_top1, video_loss
+                'Loss':[round(total_loss,5)],
+                'MyPrec':[round(prec1_my,4)],
+                'UCFPrec':[round(prec1_ucf,4)]}
+        record_info(info, 'record/m_test1/opf_test.csv','test')
+        return prec1_my, total_loss
 
     def frame2_video_level_accuracy(self):
      
-        correct = 0
-        video_level_preds = np.zeros((len(self.dic_video_level_preds),101))
-        video_level_labels = np.zeros(len(self.dic_video_level_preds))
+        my_video_correct = 0
+        ucf_video_correct = 0
+        my_video_level_preds = np.zeros((len(self.my_dic_video_level_preds),101))
+        my_video_level_labels = np.zeros(len(self.my_dic_video_level_preds))
+
+        ucf_video_level_preds = np.zeros((len(self.ucf_dic_video_level_preds),101))
+        ucf_video_level_labels = np.zeros(len(self.ucf_dic_video_level_preds))
         ii=0
-        for key in sorted(self.dic_video_level_preds.keys()):
-            name = key.split('-',1)[0]
+        jj=0
 
-            preds = self.dic_video_level_preds[name]
+        for name in sorted(self.ucf_dic_video_level_preds.keys()):
+
+            preds = self.ucf_dic_video_level_preds[name]
             label = int(self.test_video[name])-1
-                
-            video_level_preds[ii,:] = preds
-            video_level_labels[ii] = label
-            ii+=1         
+
+            ucf_video_level_preds[ii,:] = preds
+            ucf_video_level_labels[ii] = label
+            ii+=1
             if np.argmax(preds) == (label):
-                correct+=1
+                ucf_video_correct+=1
 
-        #top1 top5
-        video_level_labels = torch.from_numpy(video_level_labels).long()
-        video_level_preds = torch.from_numpy(video_level_preds).float()
+        for name in sorted(self.my_dic_video_level_preds.keys()):
 
-        loss = self.criterion(Variable(video_level_preds).cuda(), Variable(video_level_labels).cuda())    
-        top1,top5 = accuracy(video_level_preds, video_level_labels, topk=(1,5))     
-                            
-        top1 = float(top1.numpy())
-        top5 = float(top5.numpy())
-            
-        return top1,top5,loss.data.cpu().numpy()
+            preds = self.my_dic_video_level_preds[name]
+            label = int(self.test_video_my[name])-1
 
+            my_video_level_preds[jj,:] = preds
+            my_video_level_labels[jj] = label
+            jj+=1
+            if np.argmax(preds) == (label):
+                my_video_correct+=1
+
+        #top1 top5 and loss for my data
+        my_video_level_labels = torch.from_numpy(my_video_level_labels).long()
+        my_video_level_preds = torch.from_numpy(my_video_level_preds).float()
+
+        my_video_top1,my_video_top5 = accuracy(my_video_level_preds, my_video_level_labels, topk=(1,5))
+        my_video_loss = self.criterion(Variable(my_video_level_preds).cuda(), Variable(my_video_level_labels).cuda())
+
+        my_video_top1 = float(my_video_top1.numpy())
+        my_video_top5 = float(my_video_top5.numpy())
+
+
+        #top1 top5 and loss for ucf data
+        ucf_video_level_labels = torch.from_numpy(ucf_video_level_labels).long()
+        ucf_video_level_preds = torch.from_numpy(ucf_video_level_preds).float()
+        
+        ucf_video_top1,ucf_video_top5 = accuracy(ucf_video_level_preds, ucf_video_level_labels, topk=(1,5))
+        ucf_video_loss = self.criterion(Variable(ucf_video_level_preds).cuda(), Variable(ucf_video_level_labels).cuda())
+
+        ucf_video_top1 = float(ucf_video_top1.numpy())
+        ucf_video_top5 = float(ucf_video_top5.numpy())
+
+        # print "my correct is ",my_correct
+        # print "UCF correct is ", ucf_correct
+
+        video_loss = my_video_loss + ucf_video_loss
+
+        # top1 = float(top1.numpy())
+        # top5 = float(top5.numpy())
+
+        #print(' * Video level Prec@1 {top1:.3f}, Video level Prec@5 {top5:.3f}'.format(top1=top1, top5=top5))
+        return my_video_top1,ucf_video_top1,video_loss.data.cpu().numpy()
 
 if __name__=='__main__':
     main()
