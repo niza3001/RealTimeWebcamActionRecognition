@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import math
 import torch.utils.model_zoo as model_zoo
-from non_local_block import  NONLocalBlock2D
+from demo.non_local_block import  NONLocalBlock2D
 
 
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
@@ -311,5 +311,5 @@ def weight_transform(model_dict, pretrain_dict, channel):
 #Test network
 if __name__ == '__main__':
     model = resnet34(pretrained= True, channel=10)
-    print model
+    print(model)
      

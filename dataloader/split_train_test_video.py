@@ -25,7 +25,7 @@ class UCF101_splitter():
                     train_video = self.file2_dic(self.path+filename)
                 if filename.split('.')[0] == 'testlist'+self.split:
                     test_video = self.file2_dic(self.path+filename)
-        print '==> (Training video, Validation video):(', len(train_video),len(test_video),')'
+        print( '==> (Training video, Validation video):(', len(train_video),len(test_video),')')
         self.train_video = self.name_HandstandPushups(train_video)
         self.test_video = self.name_HandstandPushups(test_video)
 
@@ -66,4 +66,4 @@ if __name__ == '__main__':
     split = '01'
     splitter = UCF101_splitter(path=path,split=split)
     train_video,test_video = splitter.split_video()
-    print len(train_video),len(test_video)
+    print(len(train_video),len(test_video))

@@ -68,7 +68,7 @@ def record_info(info,filename,mode):
               'UCFPrec {top5}\n'
               'LR {lr}\n'.format(batch_time=info['Batch Time'],
                data_time=info['Data Time'], loss=info['Loss'], top1=info['MyPrec'], top5=info['UCFPrec'],lr=info['lr']))      
-        print result
+        print(result)
 
         df = pd.DataFrame.from_dict(info)
         column_names = ['Epoch','Batch Time','Data Time','Loss','MyPrec','UCFPrec','lr']
@@ -80,7 +80,7 @@ def record_info(info,filename,mode):
               'MyPrec {top1} '
               'UCFPrec {top5} \n'.format( batch_time=info['Batch Time'],
                loss=info['Loss'], top1=info['MyPrec'], top5=info['UCFPrec']))      
-        print result
+        print(result)
         df = pd.DataFrame.from_dict(info)
         column_names = ['Epoch','Batch Time','Loss','MyPrec','UCFPrec']
     

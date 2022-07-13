@@ -2,8 +2,8 @@ from PIL import Image
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 import random
-# from split_train_test_video import *
-from my_split_train_test import *
+from dataloader.split_train_test_video import *
+from dataloader.my_split_train_test import *
 import os
 import pickle
 
@@ -119,7 +119,7 @@ class spatial_dataloader():
             self.dic_training[key] = self.train_video[video]
 
     def val_sample20(self):
-        print '==> sampling testing frames'
+        print('==> sampling testing frames')
         self.dic_testing={}
         for video in self.test_video:
             nb_frame = self.frame_count[video]-10+1
@@ -136,8 +136,8 @@ class spatial_dataloader():
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                 ]))
-        print '==> Training data :',len(training_set),'frames'
-        print training_set[1][0]['img1'].size()
+        print('==> Training data :',len(training_set),'frames')
+        print(training_set[1][0]['img1'].size())
 
         train_loader = DataLoader(
             dataset=training_set,
@@ -153,9 +153,9 @@ class spatial_dataloader():
                 transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
                 ]))
 
-        print '==> Validation data :',len(validation_set),'frames'
+        print( '==> Validation data :'),len(validation_set),'frames'
         # (3, 224, 224) means RGB, 224x224
-        print validation_set[1][1].size()
+        print( validation_set[1][1].size())
         # print validation_set[1][0]['img1'].size()
 
         val_loader = DataLoader(

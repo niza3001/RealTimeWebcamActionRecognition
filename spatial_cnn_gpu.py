@@ -28,7 +28,7 @@ parser.add_argument('--demo', dest='demo', action='store_true', help='use model 
 def main():
     global arg
     arg = parser.parse_args()
-    print arg
+    print(arg)
 
     if not arg.demo:
         #Prepare DataLoader
@@ -36,7 +36,7 @@ def main():
                             BATCH_SIZE=arg.batch_size,
                             num_workers=8,
                             # path='/home/niloofar/Work/Data/Spatial/UCF-101/',
-                            path='/home/niloofar/Work/Data/Spatial/UCF-101/',
+                            path='/home/niloofar/ActionRecognition/RealTimeWebcamActionRecognition/UCF_list/',
                             ucf_list =os.getcwd()+'/UCF_list/',
                             # ucf_list =os.getcwd()+'/My_list/',
                             ucf_split ='01',
@@ -137,7 +137,7 @@ class Spatial_CNN():
             ret, orig_frame = vs.read()
 
             if ret is False:
-                print "Camera disconnected or not recognized by computer"
+                print("Camera disconnected or not recognized by computer")
                 break
 
             if frame_count == 0:
@@ -167,7 +167,7 @@ class Spatial_CNN():
             # Display the resulting frame and the classified action
             font = cv2.FONT_HERSHEY_SIMPLEX
             y0, dy = 300, 40
-            for i in xrange(5):
+            for i in range(5):
                 y = y0 + i * dy
                 cv2.putText(orig_frame, '{} - {:.2f}'.format(pred_classes[i][0], pred_classes[i][1]),
                             (5, y), font, 1, (0, 0, 255), 2)
@@ -263,7 +263,7 @@ class Spatial_CNN():
             data_dict = my_batch[0]
             label = my_batch[1]
 
-            label = label.cuda(async=True)
+            label = label.cuda(non_blocking=True)
             target_var = Variable(label).cuda()
 
             output = Variable(torch.zeros(len(data_dict['img1']),101).float()).cuda()
@@ -281,7 +281,7 @@ class Spatial_CNN():
             data_dict = ucf_batch[0]
             label = ucf_batch[1]
 
-            label = label.cuda(async=True)
+            label = label.cuda(non_blocking=True)
             target_var = Variable(label).cuda()
             
             output = Variable(torch.zeros(len(data_dict['img1']),101).float()).cuda()
@@ -351,9 +351,9 @@ class Spatial_CNN():
                 data = my_batch[1]
                 label = my_batch[2]
                 
-                label = label.cuda(async=True)
-                data_var = Variable(data).cuda(async=True)
-                target_var = Variable(label).cuda(async=True)
+                label = label.cuda(non_blocking=True)
+                data_var = Variable(data).cuda(non_blocking=True)
+                target_var = Variable(label).cuda(non_blocking=True)
 
                 # compute output
                 output = self.model(data_var)
@@ -386,9 +386,9 @@ class Spatial_CNN():
                 data = ucf_batch[1]
                 label = ucf_batch[2]
 
-                label = label.cuda(async=True)
-                data_var = Variable(data).cuda(async=True)
-                target_var = Variable(label).cuda(async=True)
+                label = label.cuda(non_blocking=True)
+                data_var = Variable(data).cuda(non_blocking=True)
+                target_var = Variable(label).cuda(non_blocking=True)
 
                 # compute output
                 output = self.model(data_var)
@@ -424,8 +424,8 @@ class Spatial_CNN():
         prec1_ucf = prec1_sum_ucf/batch_count
 
         my_video_top1, ucf_video_top1, total_video_loss = self.frame2_video_level_accuracy()
-        print "My Video Level Accuracy Is: ", my_video_top1
-        print "UCF Video Level Accuracy Is: ", ucf_video_top1
+        print("My Video Level Accuracy Is: ", my_video_top1)
+        print("UCF Video Level Accuracy Is: ", ucf_video_top1)
 
 
         info = {'Epoch':[self.epoch],

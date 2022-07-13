@@ -7,7 +7,7 @@ class my_splitter():
 
     def get_action_index(self):
         self.action_label={}
-        with open(self.path+'my_classInd.txt') as f:
+        with open(self.path+'classInd.txt') as f:
             content = f.readlines()
             content = [x.strip('\r\n') for x in content]
         f.close()
@@ -25,7 +25,7 @@ class my_splitter():
                     train_video = self.file2_dic(self.path+filename)
                 if filename.split('.')[0] == 'my_testlist'+self.split:
                     test_video = self.file2_dic(self.path+filename)
-        print '==> (Training video, Validation video):(', len(train_video),len(test_video),')'
+        print('==> (Training video, Validation video):(', len(train_video),len(test_video),')')
         self.train_video = self.name_HandstandPushups(train_video)
         self.test_video = self.name_HandstandPushups(test_video)
 
@@ -38,7 +38,7 @@ class my_splitter():
         f.close()
         dic={}
         for line in content:
-            print line
+            print( line)
             video = line.split('/',1)[1].split(' ',1)[0]
             # print video
             key = video.split('_',1)[1].split('.',1)[0]
@@ -66,4 +66,4 @@ if __name__ == '__main__':
     split = '01'
     splitter = my_splitter(path=path,split=split)
     train_video,test_video = splitter.split_video()
-    print len(train_video),len(test_video)
+    print(len(train_video),len(test_video))
